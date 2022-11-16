@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class CamHub : MonoBehaviour
+
 {
+    public AudioSource cameraChangeSoundFX;
     public Camera mainCamera; //the main player camera
 
     public int cameraAmount; //amount of swithable cameras
@@ -32,6 +35,7 @@ public class CamHub : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F)) //detect if f is pressed
         {
+            cameraChangeSoundFX.Play();
             if (isLookingAtCams)//if player is looking at cameras, then set back to main camera
             {
                 isLookingAtCams = false;//tell the sytem player is no longer looking at cameras
@@ -43,21 +47,20 @@ public class CamHub : MonoBehaviour
             }
             else //this runs when the player request to look at the cameras
             {
+                cameraChangeSoundFX.Play();
                 isLookingAtCams = true;// tell the system the player is looking at the cameras
                 mainCamera.enabled = false;//disabled the main camera
                 Cameras[CurrentlyOn].enabled = true;//enable the fist camera in the cameras list
             }
 
         }
-
-
         if (Input.GetKeyDown(KeyCode.Space))//player switches camera
         {
             if (!isLookingAtCams)//detect if player is looking at cameras
-                return;//if not end script execution
+                return;//if not end script execution   
 
-
-            if (CurrentlyOn == cameraAmount)//since we only have 3 cameras, only make sure it sorts through three cameras
+            cameraChangeSoundFX.Play();
+                if (CurrentlyOn == cameraAmount)//since we only have 3 cameras, only make sure it sorts through three cameras
                 CurrentlyOn = 0;//if we are over the camera limit we have, reset the camera to camera 1
             else//if have not hit the last camera, go to the next camera
                 CurrentlyOn++;//change camera
