@@ -10,12 +10,26 @@ public class CamHub : MonoBehaviour
     public List<Camera> Cameras = new List<Camera>();//list of cameras
     public bool isLookingAtCams = false; //start with cameras disabled
     public int CurrentlyOn = 0; //start at camera 1
+    public float mainCameraRotationSpeed;
 
-    public float sensitivity = 10;
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+    }
 
     // Update is called once per frame
     void Update()
     {
+
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Cursor.lockState == CursorLockMode.Confined)
+                Cursor.lockState = CursorLockMode.None;
+            else
+                Cursor.lockState = CursorLockMode.Confined;
+        }
+
         if (Input.GetKeyDown(KeyCode.F)) //detect if f is pressed
         {
             if (isLookingAtCams)//if player is looking at cameras, then set back to main camera
@@ -55,14 +69,19 @@ public class CamHub : MonoBehaviour
             Cameras[CurrentlyOn].enabled = true;//enable the next camera
         }
 
-        if (isLookingAtCams && !mainCamera.enabled)
+        if (!isLookingAtCams && mainCamera.enabled)
         {
-            float x = Input.GetAxis("Mouse X") * sensitivity;
-            float y = -Input.GetAxis("Mouse Y") * sensitivity;
-            mainCamera.transform.rotation = Quaternion.Euler(x, y, 0);
+            Vector3 mousePosition = mainCamera.ScreenToViewportPoint(Input.mousePosition);
+            mousePosition.z = mainCamera.nearClipPlane;
 
-
-
+            if (mousePosition.x < 0.15f && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
+            {
+                mainCamera.transform.Rotate(new Vector3(0, -mainCameraRotationSpeed, 0 * Time.deltaTime));
+            }
+            else if (mousePosition.x > 0.85f && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
+            {
+                mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * Time.deltaTime));
+            }
 
             //c.Rotate(0, 0, -Input.GetAxis("QandE") * 90 * Time.deltaTime);
         }
