@@ -7,14 +7,14 @@ public class CamHub : MonoBehaviour
     public Camera mainCamera; //the main player camera
 
     public int cameraAmount; //amount of swithable cameras
-    public List<Camera> Cameras = new List<Camera>();//list of cameras
-    public bool isLookingAtCams = false; //start with cameras disabled
+    public List<Camera> Cameras = new List<Camera>();//list of switchable cameras
+    public static bool isLookingAtCams = false; //start with cameras disabled
     public int CurrentlyOn = 0; //start at camera 1
-    public float mainCameraRotationSpeed;
+    public float mainCameraRotationSpeed; //the rotation speed of the main camera L/R
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.Confined;//start the game with the cursor confined to game screen
     }
 
     // Update is called once per frame
@@ -22,12 +22,12 @@ public class CamHub : MonoBehaviour
     {
 
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))// if esc is pressed, allow user to leave confined cursor mode, if re-pressed, re-enter confined cursor mode
         {
-            if (Cursor.lockState == CursorLockMode.Confined)
-                Cursor.lockState = CursorLockMode.None;
-            else
-                Cursor.lockState = CursorLockMode.Confined;
+            if (Cursor.lockState == CursorLockMode.Confined) // if cursor is current confined
+                Cursor.lockState = CursorLockMode.None; //un-confine the cursor
+            else //if the cursor is NOT confined
+                Cursor.lockState = CursorLockMode.Confined; //confine the cursor
         }
 
         if (Input.GetKeyDown(KeyCode.F)) //detect if f is pressed
@@ -69,21 +69,30 @@ public class CamHub : MonoBehaviour
             Cameras[CurrentlyOn].enabled = true;//enable the next camera
         }
 
-        if (!isLookingAtCams && mainCamera.enabled)
+        if (!isLookingAtCams && mainCamera.enabled) // true if plaer is not looking at cams and the main cmaera is enabled
         {
             Vector3 mousePosition = mainCamera.ScreenToViewportPoint(Input.mousePosition);
-            mousePosition.z = mainCamera.nearClipPlane;
+            /*The above is used to transform the mosue position vector, into a vecotr usable in
+             the viewport, this allows us to determin if the mouse is in the bounds of
+             the game, or if the mouse is out of it, you can also reverse this, and user it
+            for telling if the mouse is on the far left, or far right side of the screen,
+            which we do below, to move the cameras, left, and right*/
 
+
+            /*This if statement determins if the mouse is within bounds of the screen
+             * and if the mouse is on the left or right far side,
+             whichever side it may be on, move that direction.*/
             if (mousePosition.x < 0.15f && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
-                mainCamera.transform.Rotate(new Vector3(0, -mainCameraRotationSpeed, 0 * Time.deltaTime));
+                //this will rotate the main camera in the direction of the mouse
+                //using Time.delaTime will allow us to slowly, each frame,
+                //turn the camera in the mouses direction. (time.deltaTime is the time it takes for each frame, usually arround 3 milliseconds (3.0) or 2 milliseconds (2.0), nearly never one
+                mainCamera.transform.Rotate(new Vector3(0, -mainCameraRotationSpeed, 0 * 2));
             }
             else if (mousePosition.x > 0.85f && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
-                mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * Time.deltaTime));
+                mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 2));
             }
-
-            //c.Rotate(0, 0, -Input.GetAxis("QandE") * 90 * Time.deltaTime);
         }
 
     }
