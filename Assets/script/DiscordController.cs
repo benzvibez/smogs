@@ -100,7 +100,7 @@ void Update()
             });
         }
 
-        if (!disableDiscord)
+        if (!disableDiscord && discord != null)
         {
             discord.RunCallbacks();
             Thread.Sleep(1000 / 60);

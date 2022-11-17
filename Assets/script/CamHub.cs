@@ -14,16 +14,26 @@ public class CamHub : MonoBehaviour
     public static bool isLookingAtCams = false; //start with cameras disabled
     public int CurrentlyOn = 0; //start at camera 1
     public float mainCameraRotationSpeed; //the rotation speed of the main camera L/R
+    public static CamHub singleton;
 
     private void Start()
     {
+        singleton = this;
         Cursor.lockState = CursorLockMode.Confined;//start the game with the cursor confined to game screen
     }
 
-    // Update is called once per frame
+    private bool camerasInverted;
     void Update()
     {
-
+        if (OptionDataContainer.STOREDinvertedMode && !camerasInverted)
+        {
+            foreach (var c in Cameras)
+            {
+                c.transform.Rotate(new Vector3(0, 0, 180));
+            }
+            camerasInverted = true;
+        }
+        
 
         if (Input.GetKeyDown(KeyCode.Escape))// if esc is pressed, allow user to leave confined cursor mode, if re-pressed, re-enter confined cursor mode
         {
