@@ -104,7 +104,7 @@ public class CamHub : MonoBehaviour
             }
             else if (mousePosition.x > 0.85f && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
-                mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 2));
+                mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 3));
             }
         }
 

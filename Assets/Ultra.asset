@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e1dc532bcb41949b58bc4f2abfbb7e, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   intensity:
     m_OverrideState: 1
     m_Value: -0.239
@@ -145,7 +145,7 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.326
+    m_Value: 0.172
   smoothness:
     m_OverrideState: 1
     m_Value: 0.832
@@ -185,7 +185,7 @@ MonoBehaviour:
     m_Value: 1
   skipIterations:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 8
   dirtTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -205,22 +205,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f335fb1ffd8684294ad653bf1c7564, type: 3}
   m_Name: ColorAdjustments
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   postExposure:
     m_OverrideState: 1
     m_Value: 0
   contrast:
     m_OverrideState: 1
-    m_Value: -12.2
+    m_Value: 16.4
   colorFilter:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.9590502, b: 0, a: 1}
+    m_Value: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
   hueShift:
     m_OverrideState: 1
-    m_Value: -180
+    m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: -61.9
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
