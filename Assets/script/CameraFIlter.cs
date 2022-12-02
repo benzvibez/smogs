@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Map : MonoBehaviour
+public class CameraFilter : MonoBehaviour
 {
 
-    Canvas canvas;
+    Image image;
 
-    
+
     void Start()
     {
-        canvas = GetComponent<Canvas>();
+        image = GetComponent<Image>();
     }
 
-   
+
     void Update()
     {
-        
+
         if (Input.GetKeyDown(KeyCode.F))
         {
-            canvas.enabled = !canvas.enabled;
+            image.enabled = !image.enabled;
         }
     }
 }
