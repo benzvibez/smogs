@@ -15,9 +15,7 @@ public class OptionLoader : MonoBehaviour
     private VolumeParameter<float> hueShift = new VolumeParameter<float>();
 
     void Start()
-    {
-        print(OptionDataContainer.STOREDrayTracing);
-        print(OptionDataContainer.STOREDinvertedMode);
+    { 
         if (OptionDataContainer.STOREDrayTracing)
         {//enable the epicness of raytracing
 

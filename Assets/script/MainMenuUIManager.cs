@@ -20,7 +20,7 @@ public class MainMenuUIManager : MonoBehaviour
 
     private void Start()
     {
-        OptionDataContainer.SetAllValues();
+        OptionDataContainer.SetAllValues(this);
         QualitySettings.vSyncCount = 0;
     }
 

@@ -9,9 +9,9 @@ public class StaticFX : MonoBehaviour
     private bool running;
     void Update()
     {
-        if (!running && CamHub.isLookingAtCams)
+        if (!running && CamHub.singleton.isLookingAtCams)
             StartCoroutine(StartStaticness());
-        if (CamHub.isLookingAtCams)
+        if (CamHub.singleton.isLookingAtCams)
             staticness.gameObject.SetActive(true);
         else
             staticness.gameObject.SetActive(false);
