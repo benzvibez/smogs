@@ -11,6 +11,7 @@ public class CamHub : MonoBehaviour
     public GameObject camOverlay;
     public TextMeshProUGUI currentCam;
     public TextMeshProUGUI currentCamRoom;
+    public GameObject quickBar;
     public AudioSource cameraChangeSoundFX;
 
 
@@ -47,7 +48,7 @@ public class CamHub : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;//start the game with the cursor confined to game screen
     }
 
-    private bool camerasInverted;
+    internal bool camerasInverted;
     void Update()
     {
 
@@ -101,7 +102,7 @@ public class CamHub : MonoBehaviour
 
         }
 
-        if (!isLookingAtCams && mainCamera.enabled) // true if plaer is not looking at cams and the main cmaera is enabled
+        if (!isLookingAtCams && mainCamera.enabled && !GameConsole.cinematic) // true if plaer is not looking at cams and the main cmaera is enabled
         {
             Vector3 mousePosition = mainCamera.ScreenToViewportPoint(Input.mousePosition);
             /*The above is used to transform the mosue position vector, into a vecotr usable in
@@ -116,12 +117,15 @@ public class CamHub : MonoBehaviour
              whichever side it may be on, move that direction.*/
             if (mousePosition.x < minL && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
-                mainCamera.transform.Rotate(new Vector3(0, -mainCameraRotationSpeed, 0 * 2));
+                mainCamera.transform.Rotate(new Vector3(0, -mainCameraRotationSpeed, 0 * 3));
             }
             else if (mousePosition.x > minR && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
                 mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 3));
             }
+        } else
+        {
+
         }
 
     }

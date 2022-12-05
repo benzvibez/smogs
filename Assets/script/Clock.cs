@@ -3,21 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+
 public class Clock : MonoBehaviour
 {
+    public bool stoppedTimer;
+
+    public void stopTimer(bool yesstart)
+    {
+        stoppedTimer = yesstart;
+    }
+
+    public bool showingSeconds;
+
+    public void ShowSeconds(bool yesno)
+    {
+        showingSeconds = yesno;
+    }
+
+    private void Awake()
+    {
+        singleton = this;
+    }
+
+    public static Clock singleton;
     public float timeRemaining = 0;
-    public bool timerIsRunning = false;
+    public bool timerIsRunning;
     public TextMeshProUGUI timeText;
-    private void Start()
+
+    public void Start()
     {
         // Starts the timer automatically
         timerIsRunning = true;
     }
-    void Update()
+    public void Update()
     {
-        if (timerIsRunning)
+        if (timerIsRunning && !stoppedTimer)
         {
-            if (timeRemaining < 360)
+            if (timeRemaining <= 360)
             {
                 timeRemaining += Time.deltaTime * 1f;
                 DisplayTime(timeRemaining);
@@ -28,16 +51,29 @@ public class Clock : MonoBehaviour
                 timeRemaining = 0;
                 timerIsRunning = false;
             }
+        } else
+        {
+            timeText.text = $"time paused";
         }
     }
-    void DisplayTime(float timeToDisplay)
+    public void DisplayTime(float timeToDisplay)
     {
         timeToDisplay += 1;
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-        if (minutes == 0)
-            timeText.text = $"12 AM ";
-        else
-            timeText.text = $"{minutes} AM ";
+        if (showingSeconds)
+        {
+            if (minutes == 0)
+                timeText.text = $"12:{seconds} AM ";
+            else
+                timeText.text = $"{minutes}:{seconds} AM ";
+        } else
+        {
+            if (minutes == 0)
+                timeText.text = $"12 AM ";
+            else
+                timeText.text = $"{minutes} AM ";
+        }
+
     }
 }

@@ -7,40 +7,38 @@ using UnityEngine.Rendering;
 
 public class OptionLoader : MonoBehaviour
 {
-    private OptionDataContainer ODC;
+    public static OptionLoader Loader;
     public List<Material> AllMaterials = new List<Material>();
     public List<Light> AllLights = new List<Light>();
     public Volume Processing;
     private ColorAdjustments colors;
     private VolumeParameter<float> hueShift = new VolumeParameter<float>();
+    private VolumeParameter<float> HueShiftDef = new VolumeParameter<float>();
+    private ColorAdjustments ColorCached;
 
-    void Start()
-    { 
+    private void Start()
+    {
+        Loader = this;
+        SetValues();
+        HueShiftDef.value = 0f;
+    }
+
+    public void SetValues()
+    {
         if (OptionDataContainer.STOREDrayTracing)
         {//enable the epicness of raytracing
 
             foreach (var m in AllMaterials)
-            {
-                print(m.GetFloat("_Metallic"));
                 m.SetFloat("_Metallic Map", 7);
-            }
 
             foreach (var l in AllLights)
-            {
                 l.intensity = 8000;
-            }
 
-        } 
+        }
         if (OptionDataContainer.STOREDinvertedMode)
         {
             Camera.main.transform.Rotate(new Vector3(0, 0, 180));
-
         }
-    }
-
-    private void Awake()
-    {
-        ODC = OptionDataContainer.singleton;
     }
 
     private float PreviousHue = 0;
