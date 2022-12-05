@@ -5015,7 +5015,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.27
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 1
   Spatialize: 0
   SpatializePostEffects: 0
@@ -57613,7 +57613,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 1
   blendDistance: 0
-  weight: 0.86
+  weight: 1
   sharedProfile: {fileID: 11400000, guid: d7d62aca4de220b41b034ef2f4fe8888, type: 2}
 --- !u!4 &1922761986
 Transform:

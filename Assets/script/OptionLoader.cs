@@ -14,8 +14,6 @@ public class OptionLoader : MonoBehaviour
     private ColorAdjustments colors;
     private VolumeParameter<float> hueShift = new VolumeParameter<float>();
     private VolumeParameter<float> HueShiftDef = new VolumeParameter<float>();
-    private ColorAdjustments ColorCached;
-
     private void Start()
     {
         Loader = this;
@@ -37,6 +35,8 @@ public class OptionLoader : MonoBehaviour
         }
         if (OptionDataContainer.STOREDinvertedMode)
         {
+            Processing.profile.TryGet<LiftGammaGain>(out var LGG);
+            LGG.active = true;
             Camera.main.transform.Rotate(new Vector3(0, 0, 180));
         }
     }

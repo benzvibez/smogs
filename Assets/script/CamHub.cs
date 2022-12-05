@@ -17,7 +17,7 @@ public class CamHub : MonoBehaviour
 
     [Header("Camera Settings")]
     public Camera mainCamera; //the main player camera
-    public int cameraAmount; //amount of swithable cameras
+    internal int cameraAmount; //amount of swithable cameras
     public bool isLookingAtCams = false; //start with cameras disabled
     public int CurrentlyOn = 0; //start at camera 1
     public float mainCameraRotationSpeed; //the rotation speed of the main camera L/R
@@ -44,6 +44,7 @@ public class CamHub : MonoBehaviour
 
     private void Start()
     {
+        cameraAmount = Cameras.Length - 1;
         singleton = this;
         Cursor.lockState = CursorLockMode.Confined;//start the game with the cursor confined to game screen
     }
