@@ -8,7 +8,7 @@ using System;
 public class Clock : MonoBehaviour
 {
     public bool stoppedTimer;
-
+    
     public void stopTimer(bool yesstart)
     {
         stoppedTimer = yesstart;

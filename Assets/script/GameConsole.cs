@@ -13,7 +13,7 @@ using System.Linq;
 public class GameConsole : MonoBehaviour
 {
     public GameObject noclipandcinematichelp;
-    private TMP_InputField input;
+    internal TMP_InputField input;
     public GameObject DEBUG;
 
 
@@ -94,12 +94,15 @@ public class GameConsole : MonoBehaviour
 
         MAINCAMSPEED.text = "MAIN CAM SPEED: " + CamHub.singleton.mainCameraRotationSpeed;
 
-        var t = (timeleft -= Time.deltaTime * 1f);
-        float minutes1 = Mathf.FloorToInt(t / 60);
-        float seconds1 = Mathf.FloorToInt(t % 60);
+        if (!Clock.singleton.stoppedTimer)
+        {
+            var t = (timeleft -= Time.deltaTime * 1f);
+            float minutes1 = Mathf.FloorToInt(t / 60);
+            float seconds1 = Mathf.FloorToInt(t % 60);
 
 
-        TIMELEFT.text = "TIME LEFT: " + minutes1 + ":" + seconds1;
+            TIMELEFT.text = "TIME LEFT: " + minutes1 + ":" + seconds1;
+        }
 
         NOCLIP.text = "NOCLIP: " + noclipping;
 

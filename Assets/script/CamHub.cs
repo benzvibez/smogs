@@ -53,7 +53,7 @@ public class CamHub : MonoBehaviour
         singleton = this;
         Cursor.lockState = CursorLockMode.Confined;//start the game with the cursor confined to game screen
     }
-
+    internal static bool off;
     internal bool camerasInverted;
     void Update()
     {
@@ -73,16 +73,7 @@ public class CamHub : MonoBehaviour
             camerasInverted = true;
         }
 
-
-        if (Input.GetKeyDown(KeyCode.Escape))// if esc is pressed, allow user to leave confined cursor mode, if re-pressed, re-enter confined cursor mode
-        {
-            if (Cursor.lockState == CursorLockMode.Confined) // if cursor is current confined
-                Cursor.lockState = CursorLockMode.None; //un-confine the cursor
-            else //if the cursor is NOT confined
-                Cursor.lockState = CursorLockMode.Confined; //confine the cursor
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space)) //detect if space is pressed
+        if (Input.GetKeyDown(KeyCode.Space) && !off) //detect if space is pressed
         {
             cameraChangeSoundFX.Play();
             if (isLookingAtCams)//if player is looking at cameras, then set back to main camera
@@ -108,7 +99,7 @@ public class CamHub : MonoBehaviour
 
         }
 
-        if (!isLookingAtCams && mainCamera.enabled && !GameConsole.cinematic) // true if plaer is not looking at cams and the main cmaera is enabled
+        if (!isLookingAtCams && mainCamera.enabled && !GameConsole.cinematic && !off) // true if plaer is not looking at cams and the main cmaera is enabled
         {
             Vector3 mousePosition = mainCamera.ScreenToViewportPoint(Input.mousePosition);
             /*The above is used to transform the mosue position vector, into a vecotr usable in
@@ -130,24 +121,26 @@ public class CamHub : MonoBehaviour
                 mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 3));
             }
         }
-        else
-        {
-
-        }
-
     }
 
 
     public void SetCurrentButton(Image b)
     {
+        if (off)
+            return;
+
         prevBtn = btn;
         btn = b;
     }
 
     public void SwitchToCamera(int cam)
     {
+        if (off)
+            return;
+
         if (!isLookingAtCams)
             return;
+
         if (cam == -1)
         {
             cameraChangeSoundFX.Play();
@@ -182,6 +175,9 @@ public class CamHub : MonoBehaviour
 
     public void QuickClose()
     {
+        if (off)
+            return;
+
         if (isLookingAtCams)
         {
             cameraChangeSoundFX.Play();
