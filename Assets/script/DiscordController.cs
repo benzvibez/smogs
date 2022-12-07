@@ -8,13 +8,20 @@ public class DiscordController : MonoBehaviour
 {
     public static bool isDiscordAvailable;
     public bool setStatus;
-    private Discord.Discord discord;
+    public Discord.Discord discord;
+    public static DiscordController singleton;
+
+    private void Awake()
+    {
+        discord = new Discord.Discord(1042246460542033931, (UInt64)Discord.CreateFlags.Default);
+        singleton = this;
+    }
+
     void Start()
     {
         if (false)//set this to true when the game is shipped
         {
             var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            discord = new Discord.Discord(1042246460542033931, (UInt64)Discord.CreateFlags.Default);
             var activityManager = discord.GetActivityManager();
             var acitivity = new Discord.Activity
             {
@@ -51,15 +58,15 @@ public class DiscordController : MonoBehaviour
     }
 
 
-public string GetDiscordUsername()
-{
-    var userManager = discord.GetUserManager();
+    public string GetDiscordUsername()
+    {
+        var userManager = discord.GetUserManager();
 
-    return userManager.GetCurrentUser().Username;
-}
+        return userManager.GetCurrentUser().Username;
+    }
 
     private bool disableDiscord;
-void Update()
+    void Update()
     {
         if (setStatus)
         {
@@ -94,22 +101,19 @@ void Update()
                 else if (res == Discord.Result.Ok)
                 {
                     isDiscordAvailable = true;
-                    disableDiscord = true;
+                    disableDiscord = false;
                     print("Discord Available!");
                 }
             });
         }
 
-        if (!disableDiscord && discord != null)
-        {
-            discord.RunCallbacks();
-            Thread.Sleep(1000 / 60);
-        }
-}
+        discord.RunCallbacks();
+        Thread.Sleep(1000 / 60);
+    }
 
-private void OnApplicationQuit()
-{
-    //discord.Dispose();
-}
+    private void OnApplicationQuit()
+    {
+        //discord.Dispose();
+    }
 
 }

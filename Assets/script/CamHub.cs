@@ -42,6 +42,11 @@ public class CamHub : MonoBehaviour
     public float minL = -1f;
     public float minR = -1f;
 
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+    }
+
     private void Start()
     {
         cameraAmount = Cameras.Length - 1;

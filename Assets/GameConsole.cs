@@ -14,6 +14,8 @@ public class GameConsole : MonoBehaviour
 {
     public GameObject noclipandcinematichelp;
     private TMP_InputField input;
+    public GameObject DEBUG;
+
 
     [Serializable]
     public struct Command
@@ -22,12 +24,181 @@ public class GameConsole : MonoBehaviour
         public EventTrigger.TriggerEvent callback;
     }
 
+    public static GameConsole singleton;
+
     public static string cachedParam;
 
     public Command[] CommandsInfos;
 
+    internal TextMeshProUGUI fps;
+    internal TextMeshProUGUI MODE;
+    internal TextMeshProUGUI NIGHT;
+    internal TextMeshProUGUI TIMESINCESTART;
+    internal TextMeshProUGUI DISCORDUSER;
+    internal TextMeshProUGUI DISCORDUSERID;
+    internal TextMeshProUGUI MAINCAMPOS;
+    internal TextMeshProUGUI MAINCAMSPEED;
+    internal TextMeshProUGUI TIMELEFT;
+    internal TextMeshProUGUI NOCLIP;
+    internal TextMeshProUGUI CINEMATIC;
+    internal TextMeshProUGUI ALGSPAWN;
+    internal TextMeshProUGUI ALGDEDSECS;
+    internal TextMeshProUGUI ALGPASTSPAWNER;
+    internal TextMeshProUGUI ALGCURRENTSPAWNER;
+    internal TextMeshProUGUI ALGLASTDEDSEC;
+    internal TextMeshProUGUI ALGLASTLASTDEDSEC;
+    internal TextMeshProUGUI ALGINFLATE;
+    internal TextMeshProUGUI ALGDEFLATE;
+    internal TextMeshProUGUI MAINCAMROT;
+
+    private float timeleft = 360;
+    private float deltaTime;
+    public void SetDebugValues()
+    {
+        deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
+        float fpss = 1.0f / deltaTime;
+        fps.text = "FPS: " + Mathf.Ceil(fpss).ToString();
+
+        if (OptionDataContainer.STOREDinvertedMode && !OptionDataContainer.STOREDrayTracing)
+            MODE.text = "MODE: Inverted";
+        else if (OptionDataContainer.STOREDinvertedMode && OptionDataContainer.STOREDrayTracing)
+            MODE.text = "MODE: Inverted & Raytracing";
+        else if (!OptionDataContainer.STOREDinvertedMode && OptionDataContainer.STOREDrayTracing)
+            MODE.text = "MODE: Raytracing";
+        else if (!OptionDataContainer.STOREDinvertedMode && !OptionDataContainer.STOREDrayTracing)
+            MODE.text = "MODE: Normal";
+
+        float minutes = Mathf.FloorToInt(Time.unscaledTime / 60);
+        float seconds = Mathf.FloorToInt(Time.unscaledTime % 60);
+        TIMESINCESTART.text = "TIME SINCE GAME START: " + minutes + ":"+ seconds;
+        DISCORDUSERID.text = "DISCORD USER ID: " + DiscordController.singleton.discord.GetUserManager().GetCurrentUser().Id;
+        DISCORDUSER.text = "DISCORD USER: " + DiscordController.singleton.GetDiscordUsername();
+
+        if (Camera.main != null)
+        {
+            MAINCAMPOS.text = "MAIN CAM POS: " + Camera.main.transform.position;
+        }
+        else
+        {
+            MAINCAMPOS.text = "MAIN CAM POS: Not showing";
+        }
+
+        if (Camera.main != null)
+        {
+            MAINCAMROT.text = "MAIN CAM ROT: " + Camera.main.transform.eulerAngles;
+        }
+        else
+        {
+            MAINCAMROT.text = "MAIN CAM ROT: Not showing";
+        }
+
+        MAINCAMSPEED.text = "MAIN CAM SPEED: " + CamHub.singleton.mainCameraRotationSpeed;
+
+        var t = (timeleft -= Time.deltaTime * 1f);
+        float minutes1 = Mathf.FloorToInt(t / 60);
+        float seconds1 = Mathf.FloorToInt(t % 60);
+
+
+        TIMELEFT.text = "TIME LEFT: " + minutes1 + ":" + seconds1;
+
+        NOCLIP.text = "NOCLIP: " + noclipping;
+
+        CINEMATIC.text = "CINEMATIC " + cinematic;
+    }
+
     private void Awake()
     {
+        singleton = this;
+        foreach (var g in DEBUG.GetComponentsInChildren<Transform>())
+        {
+            if (g.name == "DEBUG")
+                continue;
+
+            TextMeshProUGUI t = g.GetComponent<TextMeshProUGUI>();
+            if (t.name == "FPS")
+            {
+                fps = t;
+            }
+            else if (t.name == "Mode")
+            {
+                MODE = t;
+            }
+            else if (t.name == "Night")
+            {
+                NIGHT = t;
+            }
+            else if (t.name == "TIME SINCE START")
+            {
+                TIMESINCESTART = t;
+            }
+            else if (t.name == "DISCORD USER")
+            {
+                DISCORDUSER = t;
+            }
+            else if (t.name == "DISCORD USER ID")
+            {
+                DISCORDUSERID = t;
+            }
+            else if (t.name == "MAIN CAM POS")
+            {
+                MAINCAMPOS = t;
+            }
+            else if (t.name == "MAIN CAM SPEED")
+            {
+                MAINCAMSPEED = t;
+            }
+            else if (t.name == "TIME LEFT")
+            {
+                TIMELEFT = t;
+            }
+            else if (t.name == "Noclip")
+            {
+                NOCLIP = t;
+            }
+            else if (t.name == "Cinematic")
+            {
+                CINEMATIC = t;
+            }
+            else if (t.name == "ALG SPAWN")
+            {
+                ALGSPAWN = t;
+            }
+            else if (t.name == "ALG DED SECS")
+            {
+                ALGDEDSECS = t;
+            }
+            else if (t.name == "ALG PAST SPAWNER")
+            {
+                ALGPASTSPAWNER = t;
+            }
+            else if (t.name == "ALG CURRENT SPAWNER")
+            {
+                ALGCURRENTSPAWNER = t;
+            }
+            else if (t.name == "ALG LAST DED SEC")
+            {
+                ALGLASTDEDSEC = t;
+            }
+            else if (t.name == "ALG LAST LAST DED SEC")
+            {
+                ALGLASTLASTDEDSEC = t;
+            }
+            else if (t.name == "ALG INFLATE")
+            {
+                ALGINFLATE = t;
+            }
+            else if (t.name == "ALG DEFLATE")
+            {
+                ALGDEFLATE = t;
+            }
+            else if (t.name == "MAIN CAM ROT")
+            {
+                MAINCAMROT = t;
+            }
+        }
+
+        DEBUG.SetActive(false);
+
         spawnEulers = Camera.main.transform.eulerAngles;
         spawnPOS = Camera.main.transform.position;
 
@@ -42,6 +213,7 @@ public class GameConsole : MonoBehaviour
     float xR = 0f;
     public void Update()
     {
+        SetDebugValues();
 
         if (noclipping)
         {
@@ -219,7 +391,8 @@ public class GameConsole : MonoBehaviour
                 }
             }
             output = null;
-        } else
+        }
+        else
         {
             param = null;
             checkFor = null;
@@ -251,7 +424,8 @@ public class GameConsole : MonoBehaviour
         else if (mode == "cinematic")
         {
             cinematicMode();
-        } else
+        }
+        else
             input.text = "" + mode + " is not valid";
 
         cachedParam = "";
@@ -265,7 +439,7 @@ public class GameConsole : MonoBehaviour
 
     public void noclip()
     {
-        
+
         string param = cachedParam;
         if (bool.Parse(param))
         {
@@ -291,7 +465,7 @@ public class GameConsole : MonoBehaviour
     {
         input.text = "set R speed";
         string param = cachedParam;
-        CamHub.singleton.mainCameraRotationSpeed = float.Parse("0."+param);
+        CamHub.singleton.mainCameraRotationSpeed = float.Parse("0." + param);
     }
 
     public void cinematicMode()
@@ -309,7 +483,8 @@ public class GameConsole : MonoBehaviour
             Clock.singleton.timeText.gameObject.SetActive(false);
             CamHub.singleton.quickBar.SetActive(false);
             input.text = "";
-        } else
+        }
+        else
         {
             input.text = "start noclip first";
         }
@@ -325,7 +500,7 @@ public class GameConsole : MonoBehaviour
     public void cinematicsens()
     {
         input.text = "set cine sens";
-        sensitivity = float.Parse("0."+cachedParam);
+        sensitivity = float.Parse("0." + cachedParam);
     }
 
 
@@ -365,5 +540,25 @@ public class GameConsole : MonoBehaviour
         }
         else
             input.text = "Failed - A_A";
+    }
+
+    public void reloadAlg()
+    {
+        EnemyController.singleton.ReRegister();
+        input.text = "reloaded ALG";
+    }
+
+    public void DEVELOPERMODE()
+    {
+        if (bool.Parse(cachedParam))
+        {
+            input.text = "Dev Mode On";
+            DEBUG.SetActive(true);
+        }
+        else
+        {
+            DEBUG.SetActive(false);
+            input.text = "Dev Mode Off";
+        }
     }
 }
