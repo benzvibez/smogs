@@ -10,6 +10,7 @@ public class ExitMenu : MonoBehaviour
 
     private void Awake()
     {
+        gameObject.SetActive(false);
         singleton = this;
     }
 
