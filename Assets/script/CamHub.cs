@@ -129,7 +129,8 @@ public class CamHub : MonoBehaviour
             {
                 mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 3));
             }
-        } else
+        }
+        else
         {
 
         }
@@ -191,7 +192,8 @@ public class CamHub : MonoBehaviour
                 c.camera.enabled = false;
             }
             mainCamera.enabled = true;
-        } else
+        }
+        else
         {
             currentCam.text = Cameras[CurrentlyOn].camera.gameObject.name;
             camOverlay.SetActive(true);
