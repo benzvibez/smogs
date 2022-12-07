@@ -48,8 +48,6 @@ public class ExitMenu : MonoBehaviour
 
     public void StartEverything()
     {
-        GameConsole.singleton.DEBUG.SetActive(true);
-        GameConsole.singleton.noclipandcinematichelp.SetActive(true);
         GameConsole.singleton.input.gameObject.SetActive(true);
         CamHub.singleton.quickBar.gameObject.SetActive(true);
         Clock.singleton.enabled = true;
