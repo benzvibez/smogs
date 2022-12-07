@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     public int MoveRangeMax = 28;
 
     public int RangeInflate = 3;
-    public int RangeDefalte = 5;
+    public int RangeDeflate = 5;
 
     public int RangeRandomizerAttempts = 30;
 
@@ -23,12 +23,12 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         singleton = this;
-        ALG = new Algorithm(spawners, MoveRangeMin, MoveRangeMax, Enemy, RangeInflate, RangeDefalte, RangeRandomizerAttempts, this);
+        ALG = new Algorithm(spawners, MoveRangeMin, MoveRangeMax, Enemy, RangeInflate, RangeDeflate, RangeRandomizerAttempts, this);
     }
 
     public void ReRegister()
     {
-        ALG.ReRegister(spawners, MoveRangeMin, MoveRangeMax, RangeInflate, RangeDefalte, RangeRandomizerAttempts);
+        ALG.ReRegister(spawners, MoveRangeMin, MoveRangeMax, RangeInflate, RangeDeflate, RangeRandomizerAttempts);
     }
 
     private void Update()
@@ -59,7 +59,7 @@ public class Algorithm
     public int PreviousPreviousDedicatedTimeRange;
 
     public int RangeInflate;
-    public int RangeDefalte;
+    public int RangeDeflate;
 
     public int RangeRandomizerAttempts;
 
@@ -98,7 +98,7 @@ public class Algorithm
 
         GameConsole.singleton.ALGINFLATE.text = "ALGORITHM INFLATE: " + RangeInflate;
 
-        GameConsole.singleton.ALGDEFLATE.text = "ALGORITHM DEFLATE: " + RangeDefalte;
+        GameConsole.singleton.ALGDEFLATE.text = "ALGORITHM DEFLATE: " + RangeDeflate;
     }
 
     public bool Start()
@@ -139,7 +139,7 @@ public class Algorithm
         {
             var _DedicatedCurrentTimeRange = Mathf.RoundToInt(Random.Range(Min, Max));
 
-            if (_DedicatedCurrentTimeRange == PreviousDedicatedTimeRange + RangeInflate || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange - RangeDefalte || _DedicatedCurrentTimeRange == PreviousPreviousDedicatedTimeRange || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange)
+            if (_DedicatedCurrentTimeRange == PreviousDedicatedTimeRange + RangeInflate || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange - RangeDeflate || _DedicatedCurrentTimeRange == PreviousPreviousDedicatedTimeRange || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange)
                 continue;
             else
                 return _DedicatedCurrentTimeRange;
@@ -173,7 +173,7 @@ public class Algorithm
         Max = max;
         Enemy = enemy;
         RangeInflate = rangeInflate;
-        RangeDefalte = rangeDeflate;
+        RangeDeflate = rangeDeflate;
         RangeRandomizerAttempts = rangeRandomizerAttempts;
         enemyController = EnemyController;
     }
@@ -184,7 +184,7 @@ public class Algorithm
         Min = min;
         Max = max;
         RangeInflate = rangeInflate;
-        RangeDefalte = rangeDeflate;
+        RangeDeflate = rangeDeflate;
         RangeRandomizerAttempts = rangeRandomizerAttempts;
     }
 
