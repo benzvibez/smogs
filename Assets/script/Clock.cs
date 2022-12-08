@@ -6,7 +6,12 @@ using TMPro;
 using System;
 
 public class Clock : MonoBehaviour
+
 {
+    [Header("Audio % UI")]
+    public AudioSource winmusic;
+    public RawImage winimage;
+
     public bool stoppedTimer;
     
     public void stopTimer(bool yesstart)
@@ -42,7 +47,7 @@ public class Clock : MonoBehaviour
         {
             if (timeRemaining <= 360)
             {
-                timeRemaining += Time.deltaTime * 1f;
+                timeRemaining += Time.deltaTime * 1f*10;
                 DisplayTime(timeRemaining);
             }
             else
@@ -50,10 +55,12 @@ public class Clock : MonoBehaviour
                 Debug.Log("Time has run out!");
                 timeRemaining = 0;
                 timerIsRunning = false;
+                winmusic.Play();
+                winimage.enabled = true;
             }
         } else
         {
-            timeText.text = $"time paused";
+            timeText.text = $"fr ong";
         }
     }
     public void DisplayTime(float timeToDisplay)
