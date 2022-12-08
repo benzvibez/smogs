@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class EnemyController : MonoBehaviour
 {
     public GameObject Enemy;
+
+    public List<GameObject> routeToRoom = new List<GameObject>();
+
     public List<GameObject> spawners = new List<GameObject>();
 
     public static EnemyController singleton;
@@ -23,12 +27,12 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         singleton = this;
-        ALG = new Algorithm(spawners, MoveRangeMin, MoveRangeMax, Enemy, RangeInflate, RangeDeflate, RangeRandomizerAttempts, this);
+        ALG = new Algorithm(spawners, routeToRoom, MoveRangeMin, MoveRangeMax, Enemy, RangeInflate, RangeDeflate, RangeRandomizerAttempts, this);
     }
 
     public void ReRegister()
     {
-        ALG.ReRegister(spawners, MoveRangeMin, MoveRangeMax, RangeInflate, RangeDeflate, RangeRandomizerAttempts);
+        ALG.ReRegister(spawners, routeToRoom, MoveRangeMin, MoveRangeMax, RangeInflate, RangeDeflate, RangeRandomizerAttempts);
     }
 
     private void Update()
@@ -82,6 +86,7 @@ public class Algorithm
 
     public void SetDebugger()
     {
+        if (NextSpawner != null)
         GameConsole.singleton.ALGSPAWN.text = "NEXT ALGORITHM SPAWN: " + NextSpawner.name;
 
         GameConsole.singleton.ALGDEDSECS.text = "ALGORITHM DEDICATED SECONDS: " + DedicatedCurrentTimeRange;
@@ -105,10 +110,10 @@ public class Algorithm
     {
         if (NextSpawner == null)
             NextSpawner = GenerateNextSpawnerIndex();
+        MonoBehaviour.print(NextSpawner);
         enemyController.StartCoroutine(WaitOnDTRForReInit());
         return false;
     }
-
 
     public void Move()
     {
@@ -148,25 +153,105 @@ public class Algorithm
         return DedicatedCurrentTimeRange;
     }
 
+    GameObject GetClosestSpawner()
+    {
+        Debug.Log("going to cloests spawner within regions");
+        Transform tMin = null;
+        float minDist = Mathf.Infinity;
+        Vector3 currentPos = enemyController.Enemy.transform.position;
+        foreach (GameObject t in RegisteredSpawners)
+        {
+
+            if (t.gameObject == CurrentSpawner || t.gameObject == PastSpawner)
+                continue;
+
+                float dist = Vector3.Distance(t.transform.position, currentPos);
+
+            if (dist < minDist)
+            {
+                tMin = t.transform;
+                minDist = dist;
+            }
+        }
+            return tMin.gameObject;
+    }
+
+    public List<GameObject> RouteToRoom = new();
+    public bool goingToRoom;
+    public bool LeavingRoom;
+    public int goingToRoomNextIndex = 0;
+    public GameObject goingToRoomCurrentRoom;
+
+    public int canAttack = 3;
 
     public GameObject GenerateNextSpawnerIndex()
     {
-        
-
-        for (var i = 0; i != RangeRandomizerAttempts; i++)
+        var type = Random.Range(0, 32);
+        if (type > 26)
         {
-            GameObject _NextSpawner = RegisteredSpawners[Mathf.RoundToInt(Random.Range(0, RegisteredSpawners.Count))];
-            if (_NextSpawner == PastSpawner || _NextSpawner == CurrentSpawner)
-                continue;
-            else
-                return _NextSpawner;
+            return RegisteredSpawners[Random.Range(1, RegisteredSpawners.Count)];
         }
-        Debug.LogWarning("ALG: failed to randomize next position. defaulting to the same position as we are in now.");
-        return CurrentSpawner;
+        else if (type > 0 && type < 21 && !goingToRoom && !LeavingRoom) //high chance that it will go on approach to office
+        {
+            if (canAttack != 0)
+            {
+                canAttack--;
+                return GetClosestSpawner();
+            }
+            else
+            {
+                canAttack = 5;
+                Debug.Log("Room approach started");
+                goingToRoom = true;
+                goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
+                goingToRoomNextIndex++;
+
+                return goingToRoomCurrentRoom;
+            }
+        }
+        else if (goingToRoom && !LeavingRoom)
+        {
+            Debug.Log("Room approach moving");
+            goingToRoomNextIndex++;
+            if (goingToRoomNextIndex == 3)
+            {
+                var idx = Random.Range(2, 5);
+                goingToRoom = false;
+                LeavingRoom = true;
+                goingToRoomCurrentRoom = null;
+                return RouteToRoom[idx];
+            }
+            else
+            {
+                goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
+                return goingToRoomCurrentRoom;
+            }
+        }
+        else if (LeavingRoom && !goingToRoom)
+        {
+            goingToRoomNextIndex--;
+            if (goingToRoomNextIndex == 0)
+            {
+                Debug.Log("Room approach leaving");
+                goingToRoom = false;
+                LeavingRoom = false;
+                goingToRoomNextIndex = 0;
+                goingToRoomCurrentRoom = null;
+                return GetClosestSpawner();
+            }
+            else
+            {
+                goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
+                return goingToRoomCurrentRoom;
+            }
+        }
+        else if (type > 0 && type < 25 && !goingToRoom) // high chance that it will go to nearest spawner regions
+            return GetClosestSpawner();
+
+        return GetClosestSpawner();
     }
 
-
-    public Algorithm(List<GameObject> spawners, int min, int max, GameObject enemy, int rangeInflate, int rangeDeflate, int rangeRandomizerAttempts, EnemyController EnemyController)
+    public Algorithm(List<GameObject> spawners, List<GameObject> RTR, int min, int max, GameObject enemy, int rangeInflate, int rangeDeflate, int rangeRandomizerAttempts, EnemyController EnemyController)
     {
         RegisteredSpawners = spawners;
         Min = min;
@@ -176,9 +261,10 @@ public class Algorithm
         RangeDeflate = rangeDeflate;
         RangeRandomizerAttempts = rangeRandomizerAttempts;
         enemyController = EnemyController;
+        RouteToRoom = RTR;
     }
 
-    public void ReRegister(List<GameObject> Spawners, int min, int max, int rangeInflate, int rangeDeflate, int rangeRandomizerAttempts)
+    public void ReRegister(List<GameObject> Spawners, List<GameObject> RTR, int min, int max, int rangeInflate, int rangeDeflate, int rangeRandomizerAttempts)
     {
         RegisteredSpawners = Spawners;
         Min = min;
@@ -186,6 +272,7 @@ public class Algorithm
         RangeInflate = rangeInflate;
         RangeDeflate = rangeDeflate;
         RangeRandomizerAttempts = rangeRandomizerAttempts;
+        RouteToRoom = RTR;
     }
 
 }
