@@ -7,10 +7,11 @@ using System;
 public class PowerController : MonoBehaviour
 {
     public static PowerController singleton;
-    public float powerTimeInSeconds = 120;
+    public float powerTimeInSeconds = 1440;
     public float powerRemaining;
     public bool powerIsRunning;
     public TextMeshProUGUI powerText;
+    public AudioSource losemusic;
 
     private float flashTimer = 1;
     private float flashTimerRemainder;
@@ -53,7 +54,7 @@ public class PowerController : MonoBehaviour
                 powerIsRunning = false;
                 ExitMenu.singleton.StopEverything();
                 //play loose msuic and shit here and jumpscare
-
+                losemusic.Play(); 
             }
         }
     }
@@ -66,7 +67,7 @@ public class PowerController : MonoBehaviour
 
         if (percent == 0)
         {
-            powerText.text = $"Power 0%, your fucked";
+            powerText.text = $"Power 0%, poutinee man got u :(";
         }
         else
         {
