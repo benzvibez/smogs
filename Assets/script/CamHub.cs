@@ -75,28 +75,7 @@ public class CamHub : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !off) //detect if space is pressed
         {
-            cameraChangeSoundFX.Play();
-            if (isLookingAtCams)//if player is looking at cameras, then set back to main camera
-            {
-                camOverlay.SetActive(false);
-                isLookingAtCams = false;//tell the sytem player is no longer looking at cameras
-                foreach (var c in Cameras)//for each camera in the list, disable them
-                {
-                    c.camera.enabled = false;//disables the camerassss
-                }
-                mainCamera.enabled = true;//enabled the main camera, after the foreach loop is doneeee
-            }
-            else //this runs when the player request to look at the cameras
-            {
-                currentCam.text = Cameras[CurrentlyOn].camera.gameObject.name;
-                camOverlay.SetActive(true);
-                cameraChangeSoundFX.Play();
-                isLookingAtCams = true;// tell the system the player is looking at the cameras
-                mainCamera.enabled = false;//disabled the main camera
-                currentCamRoom.text = Cameras[CurrentlyOn].room;
-                Cameras[CurrentlyOn].camera.enabled = true;//enable the fist camera in the cameras list
-            }
-
+            CamerasED();
         }
 
         if (!isLookingAtCams && mainCamera.enabled && !GameConsole.cinematic && !off) // true if plaer is not looking at cams and the main cmaera is enabled
@@ -175,11 +154,19 @@ public class CamHub : MonoBehaviour
 
     public void QuickClose()
     {
+        CamerasED();
+    }
+
+    public void CamerasED()
+    {
         if (off)
             return;
 
+        cameraChangeSoundFX.Play();
         if (isLookingAtCams)
         {
+            PowerController.singleton.additionalPower += -4;
+            Clock.singleton.clockAdditionalSpeed -= 2;
             cameraChangeSoundFX.Play();
             camOverlay.SetActive(false);
             isLookingAtCams = false;
@@ -191,6 +178,8 @@ public class CamHub : MonoBehaviour
         }
         else
         {
+            PowerController.singleton.additionalPower += 4;
+            Clock.singleton.clockAdditionalSpeed += 2;
             currentCam.text = Cameras[CurrentlyOn].camera.gameObject.name;
             camOverlay.SetActive(true);
             cameraChangeSoundFX.Play();

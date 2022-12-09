@@ -13,7 +13,7 @@ public class Clock : MonoBehaviour
     public RawImage winimage;
 
     public bool stoppedTimer;
-    
+
     public void stopTimer(bool yesstart)
     {
         stoppedTimer = yesstart;
@@ -35,19 +35,22 @@ public class Clock : MonoBehaviour
     public float timeRemaining = 0;
     public bool timerIsRunning;
     public TextMeshProUGUI timeText;
+    public float clockAdditionalSpeed = 2.5f;
 
     public void Start()
     {
         // Starts the timer automatically
         timerIsRunning = true;
     }
+
     public void Update()
     {
+
         if (timerIsRunning && !stoppedTimer)
         {
             if (timeRemaining <= 360)
             {
-                timeRemaining += Time.deltaTime * 1f*10;
+                timeRemaining += Time.deltaTime * 1f * clockAdditionalSpeed;
                 DisplayTime(timeRemaining);
             }
             else
@@ -58,7 +61,8 @@ public class Clock : MonoBehaviour
                 winmusic.Play();
                 winimage.enabled = true;
             }
-        } else
+        }
+        else
         {
             timeText.text = $"fr ong";
         }
@@ -74,7 +78,8 @@ public class Clock : MonoBehaviour
                 timeText.text = $"12:{seconds} AM ";
             else
                 timeText.text = $"{minutes}:{seconds} AM ";
-        } else
+        }
+        else
         {
             if (minutes == 0)
                 timeText.text = $"12 AM ";

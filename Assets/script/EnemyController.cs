@@ -189,7 +189,7 @@ public class Algorithm
         var type = Random.Range(0, 32);
         if (type > 26)
         {
-            return RegisteredSpawners[Random.Range(1, RegisteredSpawners.Count)];
+            return RegisteredSpawners[Random.Range(RangeDeflate - RangeInflate + 1, RegisteredSpawners.Count)];
         }
         else if (type > 0 && type < 21 && !goingToRoom && !LeavingRoom) //high chance that it will go on approach to office
         {
@@ -200,7 +200,7 @@ public class Algorithm
             }
             else
             {
-                canAttack = 5;
+                canAttack = 3;
                 Debug.Log("Room approach started");
                 goingToRoom = true;
                 goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];

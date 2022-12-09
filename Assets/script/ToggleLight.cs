@@ -5,21 +5,35 @@ using UnityEngine;
 public class ToggleLight : MonoBehaviour
 {
 
-	Light light;
+    Light bossroomlight;
+    public bool isOn;
 
-	// Use this for initialization
-	void Start()
-	{
-		light = GetComponent<Light>();
-	}
+    // Use this for initialization
+    void Start()
+    {
+        bossroomlight = GetComponent<Light>();
+    }
 
-	// Update is called once per frame
-	void Update()
-	{
-		// Toggle light on/off when L key is pressed.
-		if (Input.GetKeyUp(KeyCode.L))
-		{
-			light.enabled = !light.enabled;
-		}
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        // Toggle light on/off when L key is pressed.
+        if (Input.GetKeyUp(KeyCode.L))
+        {
+
+            bossroomlight.enabled = !bossroomlight.enabled;
+            isOn = bossroomlight.enabled;
+
+            if (isOn)
+            {
+                PowerController.singleton.additionalPower += 2;
+                Clock.singleton.clockAdditionalSpeed += 1;
+            }
+            else
+            {
+                Clock.singleton.clockAdditionalSpeed -= 1;
+                PowerController.singleton.additionalPower -= 2;
+            }
+        }
+    }
 }
