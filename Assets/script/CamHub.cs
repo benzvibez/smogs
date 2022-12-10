@@ -165,7 +165,8 @@ public class CamHub : MonoBehaviour
         cameraChangeSoundFX.Play();
         if (isLookingAtCams)
         {
-            PowerController.singleton.additionalPower += -4;
+            PowerController.singleton.UsageLevel -= 3;
+            PowerController.singleton.additionalPower -= 4;
             Clock.singleton.clockAdditionalSpeed -= 2;
             cameraChangeSoundFX.Play();
             camOverlay.SetActive(false);
@@ -178,6 +179,7 @@ public class CamHub : MonoBehaviour
         }
         else
         {
+            PowerController.singleton.UsageLevel += 3;
             PowerController.singleton.additionalPower += 4;
             Clock.singleton.clockAdditionalSpeed += 2;
             currentCam.text = Cameras[CurrentlyOn].camera.gameObject.name;

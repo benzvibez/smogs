@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class PowerController : MonoBehaviour
 {
@@ -12,9 +13,11 @@ public class PowerController : MonoBehaviour
     public bool powerIsRunning;
     public TextMeshProUGUI powerText;
     public AudioSource losemusic;
+    public RawImage usageImg;
 
-    private float flashTimer = 1;
-    private float flashTimerRemainder;
+    public List<Texture> usageMeters = new(); // 0-4 (1-5)
+
+    private float flashTimerRemainder = 0.3f;
 
     public void Start()
     {
@@ -24,20 +27,21 @@ public class PowerController : MonoBehaviour
 
     private void Awake()
     {
+        powerText.color = Color.green;
         singleton = this;
     }
 
     public float additionalPower = 1;
     public void Update()
     {
-
+        usageImg.texture = usageImg.texture = usageMeters[UsageLevel]; // since this is zero-based we minus one.
 
         if (powerIsRunning)
         {
             flashTimerRemainder -= Time.deltaTime * 1f;
             if (flashTimerRemainder < 0)
             {
-                flashTimerRemainder = 1;
+                flashTimerRemainder = 0.3f;
                 Flash();
             }
 
@@ -53,35 +57,54 @@ public class PowerController : MonoBehaviour
                 powerRemaining = 0;
                 powerIsRunning = false;
                 ExitMenu.singleton.StopEverything();
+                ExitMenu.singleton.enabled = false;
                 //play loose msuic and shit here and jumpscare
                 losemusic.Play(); 
             }
         }
+
     }
 
     public void DisplayPower(float powerToDisplay)
     {
+
         powerToDisplay += 1;
         float percent = Mathf.FloorToInt(powerToDisplay / powerTimeInSeconds * 100); //basic maths to get a percentage
 
 
         if (percent == 0)
         {
-            powerText.text = $"Power 0%, poutinee man got u :(";
+            powerText.text = $"0%, poutinee man got u :(";
         }
         else
         {
-            powerText.text = $"Power: {percent}%";
+            if (percent < 75 && percent > 50 && percent > 25)
+                powerText.color = Color.cyan;
+
+            if (percent < 50 && percent > 25)
+                powerText.color = Color.yellow;
+
+            if (percent < 25)
+                powerText.color = Color.red;
+
+            powerText.text = $"{percent}%";
         }
 
     }
 
+    public int UsageLevel; // 0-4 (1-5)
+
+
     public void Flash()
     {
         if (powerText.fontStyle == FontStyles.Underline)
+        {
             powerText.fontStyle = FontStyles.Normal;
+        }
         else
+        {
             powerText.fontStyle = FontStyles.Underline;
+        }
     }
 
 

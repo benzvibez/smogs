@@ -215,11 +215,11 @@ public class Algorithm
             goingToRoomNextIndex++;
             if (goingToRoomNextIndex == 3)
             {
-                var idx = Random.Range(2, 5);
+                var idx = Random.Range(3, 5); // if he goes here plauer dead NOT IMPLIMENTED YET
                 goingToRoom = false;
                 LeavingRoom = true;
                 goingToRoomCurrentRoom = null;
-                return RouteToRoom[idx];
+                return RouteToRoom[goingToRoomNextIndex];
             }
             else
             {
