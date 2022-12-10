@@ -50,6 +50,11 @@ public class GameConsole : MonoBehaviour
     internal TextMeshProUGUI ALGINFLATE;
     internal TextMeshProUGUI ALGDEFLATE;
     internal TextMeshProUGUI MAINCAMROT;
+    internal TextMeshProUGUI ALGATTACKING;
+    internal TextMeshProUGUI POWERPERCENT;
+    internal TextMeshProUGUI POWERUSAGE;
+    internal TextMeshProUGUI POWERMULTIPLIER;
+
 
     private float timeleft = 360;
     private float deltaTime;
@@ -197,6 +202,22 @@ public class GameConsole : MonoBehaviour
             else if (t.name == "MAIN CAM ROT")
             {
                 MAINCAMROT = t;
+            }
+            else if (t.name == "attacking")
+            {
+                ALGATTACKING = t;
+            }
+            else if (t.name == "POWER")
+            {
+                POWERPERCENT = t;
+            }
+            else if (t.name == "USAGE")
+            {
+                POWERUSAGE = t;
+            }
+            else if (t.name == "POWER MUlTIPLIER")
+            {
+                POWERMULTIPLIER = t;
             }
         }
 
@@ -464,11 +485,53 @@ public class GameConsole : MonoBehaviour
         noclipSpeed = float.Parse(param);
     }
 
+
+
     public void setNoclipRSpeed()
     {
         input.text = "set R speed";
         string param = cachedParam;
         CamHub.singleton.mainCameraRotationSpeed = float.Parse("0." + param);
+    }
+
+
+    public void Attack()
+    {
+        bool.TryParse(cachedParam, out var yesno);
+        if (yesno)
+        {
+            EnemyController.singleton.ALG.canAttack = 0;
+            EnemyController.singleton.ALG.Move();
+        } else
+        {
+            EnemyController.singleton.ALG.canAttack = 3;
+            EnemyController.singleton.ALG.Move();
+        }
+
+    }
+
+
+    public void SetPowerP()
+    {
+        PowerController.singleton.powerRemaining = Mathf.FloorToInt(float.Parse(cachedParam) / PowerController.singleton.powerTimeInSeconds * 100);
+    }
+
+    public void SetPowerT()
+    {
+        PowerController.singleton.powerRemaining = float.Parse(cachedParam);
+    }
+
+    public void SetPowerM()
+    {
+        PowerController.singleton.additionalPower = float.Parse(cachedParam);
+    }
+
+    public void SetPowerU()
+    {
+        if (uint.Parse(cachedParam) > 4)
+            throw new Exception("you cannot try to set the usage level above 5 or below 0!");
+
+        PowerController.singleton.UsageLevel = uint.Parse(cachedParam);
     }
 
     public void cinematicMode()

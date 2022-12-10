@@ -87,7 +87,7 @@ public class Algorithm
     public void SetDebugger()
     {
         if (NextSpawner != null)
-        GameConsole.singleton.ALGSPAWN.text = "NEXT ALGORITHM SPAWN: " + NextSpawner.name;
+            GameConsole.singleton.ALGSPAWN.text = "NEXT ALGORITHM SPAWN: " + NextSpawner.name;
 
         GameConsole.singleton.ALGDEDSECS.text = "ALGORITHM DEDICATED SECONDS: " + DedicatedCurrentTimeRange;
 
@@ -104,6 +104,7 @@ public class Algorithm
         GameConsole.singleton.ALGINFLATE.text = "ALGORITHM INFLATE: " + RangeInflate;
 
         GameConsole.singleton.ALGDEFLATE.text = "ALGORITHM DEFLATE: " + RangeDeflate;
+        GameConsole.singleton.ALGATTACKING.text = "ALG ATTACKING: " + goingToRoom + "(" + canAttack + ")";
     }
 
     public bool Start()
@@ -165,7 +166,7 @@ public class Algorithm
             if (t.gameObject == CurrentSpawner || t.gameObject == PastSpawner)
                 continue;
 
-                float dist = Vector3.Distance(t.transform.position, currentPos);
+            float dist = Vector3.Distance(t.transform.position, currentPos);
 
             if (dist < minDist)
             {
@@ -173,7 +174,7 @@ public class Algorithm
                 minDist = dist;
             }
         }
-            return tMin.gameObject;
+        return tMin.gameObject;
     }
 
     public List<GameObject> RouteToRoom = new();

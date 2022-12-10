@@ -34,8 +34,7 @@ public class PowerController : MonoBehaviour
     public float additionalPower = 1;
     public void Update()
     {
-        usageImg.texture = usageImg.texture = usageMeters[UsageLevel]; // since this is zero-based we minus one.
-
+        usageImg.texture = usageImg.texture = usageMeters[(int)UsageLevel]; // since this is zero-based we minus one.
         if (powerIsRunning)
         {
             flashTimerRemainder -= Time.deltaTime * 1f;
@@ -48,6 +47,9 @@ public class PowerController : MonoBehaviour
 
             if (powerRemaining > 0)
             {
+                GameConsole.singleton.POWERPERCENT.text = "POWER: "+powerRemaining;
+                GameConsole.singleton.POWERUSAGE.text = "USAGE: "+UsageLevel;
+                GameConsole.singleton.POWERMULTIPLIER.text = "POWER MULTIPLIER: "+additionalPower;
                 powerRemaining -= Time.deltaTime * 1f * additionalPower;
                 DisplayPower(powerRemaining);
             }
@@ -74,7 +76,7 @@ public class PowerController : MonoBehaviour
 
         if (percent == 0)
         {
-            powerText.text = $"0%, poutinee man got u :(";
+            powerText.text = $"0%";
         }
         else
         {
@@ -92,7 +94,7 @@ public class PowerController : MonoBehaviour
 
     }
 
-    public int UsageLevel; // 0-4 (1-5)
+    public uint UsageLevel; // 0-4 (1-5)
 
 
     public void Flash()
