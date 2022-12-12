@@ -61,15 +61,14 @@ public class DiscordController : MonoBehaviour
     public string GetDiscordUsername()
     {
         var userManager = discord.GetUserManager();
-
-        return userManager.GetCurrentUser().Username;
+        if (userManager.GetCurrentUser().Username != "")
+            return userManager.GetCurrentUser().Username;
+        else return null;
     }
 
     private bool disableDiscord;
     void Update()
     {
-        if (setStatus)
-        {
             setStatus = false;
             var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             discord = new Discord.Discord(1042246460542033931, (UInt64)Discord.CreateFlags.Default);
@@ -105,10 +104,14 @@ public class DiscordController : MonoBehaviour
                     print("Discord Available!");
                 }
             });
+
+        if (isDiscordAvailable)
+        {
+            discord.RunCallbacks();
+            Thread.Sleep(1000 / 60);
         }
 
-        discord.RunCallbacks();
-        Thread.Sleep(1000 / 60);
+
     }
 
     private void OnApplicationQuit()
