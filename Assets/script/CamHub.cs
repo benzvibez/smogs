@@ -103,6 +103,23 @@ public class CamHub : MonoBehaviour
     }
 
 
+    public bool hidden;
+    public void Hide()
+    {
+        if (hidden)
+        {
+            hidden = false;
+            mainCamera.transform.position = new Vector3(-70.195f, 4.334f, 1.916f);
+            mainCamera.transform.eulerAngles = new Vector3(0, 147.73f, 0);
+        } else
+        {
+            hidden = true;
+            mainCamera.transform.position = new Vector3(-68.054f, 2.76f, 1.916f);
+            mainCamera.transform.eulerAngles = new Vector3(0, 170.726f, 0);
+        }
+    }
+
+
     public void SetCurrentButton(Image b)
     {
         if (off)
