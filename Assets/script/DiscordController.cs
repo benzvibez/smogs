@@ -6,8 +6,7 @@ using System;
 
 public class DiscordController : MonoBehaviour
 {
-    public static bool isDiscordAvailable;
-    public bool setStatus;
+    public bool isDiscordAvailable;
     public Discord.Discord discord;
     public static DiscordController singleton;
 
@@ -19,7 +18,7 @@ public class DiscordController : MonoBehaviour
 
     void Start()
     {
-        if (false)//set this to true when the game is shipped
+        if (false == true)
         {
             var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var activityManager = discord.GetActivityManager();
@@ -50,7 +49,6 @@ public class DiscordController : MonoBehaviour
                 else if (res == Discord.Result.Ok)
                 {
                     isDiscordAvailable = true;
-                    disableDiscord = true;
                     print("Discord Available!");
                 }
             });
@@ -61,57 +59,14 @@ public class DiscordController : MonoBehaviour
     public string GetDiscordUsername()
     {
         var userManager = discord.GetUserManager();
-        if (userManager.GetCurrentUser().Username != "")
-            return userManager.GetCurrentUser().Username;
-        else return null;
+        return userManager.GetCurrentUser().Username;
+
     }
 
-    private bool disableDiscord;
     void Update()
     {
-            setStatus = false;
-            var unixTimeStamp = DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            discord = new Discord.Discord(1042246460542033931, (UInt64)Discord.CreateFlags.Default);
-            var activityManager = discord.GetActivityManager();
-            var acitivity = new Discord.Activity
-            {
-
-                State = "building that shit",
-                Details = "building ong",
-                Assets =
-            {
-                LargeImage = "smongs_logo",
-                LargeText = "fr fr"
-            },
-                Timestamps =
-            {
-                Start = (int)unixTimeStamp
-            }
-            };
-
-            activityManager.UpdateActivity(acitivity, (res) =>
-            {
-                if (res != Discord.Result.Ok)
-                {
-                    isDiscordAvailable = false;
-                    print("Discord is fucking dying");
-                    //discord.Dispose();
-                }
-                else if (res == Discord.Result.Ok)
-                {
-                    isDiscordAvailable = true;
-                    disableDiscord = false;
-                    print("Discord Available!");
-                }
-            });
-
-        if (isDiscordAvailable)
-        {
             discord.RunCallbacks();
             Thread.Sleep(1000 / 60);
-        }
-
-
     }
 
     private void OnApplicationQuit()
