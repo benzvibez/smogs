@@ -14,24 +14,6 @@ public class ExitMenu : MonoBehaviour
         singleton = this;
     }
 
-    private void Update()
-    {
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (Menu.activeInHierarchy)
-            {
-                Menu.SetActive(false);
-                StartEverything();
-            } else
-            {
-                Menu.SetActive(true);
-                StopEverything();
-            }
-            
-        }
-    }
-
     public void StopEverything()
     {
         GameConsole.singleton.DEBUG.SetActive(false);

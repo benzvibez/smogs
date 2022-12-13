@@ -11,7 +11,7 @@ public class Clock : MonoBehaviour
     [Header("Audio % UI")]
     public AudioSource winmusic;
     public RawImage winimage;
-
+    public UnityEngine.Video.VideoPlayer dingdong;
     public bool stoppedTimer;
 
     public void stopTimer(bool yesstart)
@@ -60,6 +60,8 @@ public class Clock : MonoBehaviour
                 timerIsRunning = false;
                 winmusic.Play();
                 winimage.enabled = true;
+                dingdong.enabled = true;
+                dingdong.Play();
             }
         }
         else
