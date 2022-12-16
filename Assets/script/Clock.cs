@@ -50,7 +50,7 @@ public class Clock : MonoBehaviour
         {
             if (timeRemaining <= 360)
             {
-                timeRemaining += Time.deltaTime * 1f * clockAdditionalSpeed;
+                timeRemaining += Time.deltaTime * clockAdditionalSpeed;
                 DisplayTime(timeRemaining);
             }
             else

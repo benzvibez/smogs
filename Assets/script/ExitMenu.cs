@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ExitMenu : MonoBehaviour
 {
@@ -12,6 +13,31 @@ public class ExitMenu : MonoBehaviour
     {
         Menu.SetActive(false);
         singleton = this;
+    }
+
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Menu.SetActive(!Menu.activeInHierarchy);
+        }
+
+    }
+
+    public void MenuShow()
+    {
+        Menu.SetActive(!Menu.activeInHierarchy);
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     public void StopEverything()
@@ -25,7 +51,6 @@ public class ExitMenu : MonoBehaviour
             c.camera.enabled = false;
         CamHub.singleton.mainCamera.enabled = true;
         CamHub.singleton.enabled = false;
-        EnemyController.singleton.enabled = false;
     }
 
     public void StartEverything()
@@ -34,6 +59,5 @@ public class ExitMenu : MonoBehaviour
         CamHub.singleton.quickBar.gameObject.SetActive(true);
         Clock.singleton.enabled = true;
         CamHub.singleton.enabled = true;
-        EnemyController.singleton.enabled = true;
     }
 }

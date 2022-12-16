@@ -5,8 +5,15 @@ using UnityEngine.UI;
 
 public class StaticFX : MonoBehaviour
 {
+    public static StaticFX singleton;
     public RawImage staticness;
     private bool running;
+
+    private void Awake()
+    {
+        singleton = this;
+    }
+
     void Update()
     {
         if (!running && CamHub.singleton.isLookingAtCams)

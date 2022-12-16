@@ -104,8 +104,12 @@ public class CamHub : MonoBehaviour
 
 
     public bool hidden;
+    public bool hideOff;
     public void Hide(TextMeshProUGUI txt)
     {
+        if (hideOff)
+            return;
+
         if (hidden)
         {
             off = false;
@@ -119,6 +123,10 @@ public class CamHub : MonoBehaviour
             hidden = true;
             quickBar.SetActive(false);
             txt.text = "UNHIDE";
+            if (!mainCamera.enabled)
+                CamerasED();
+
+            mainCamera.enabled = true;
             mainCamera.transform.position = new Vector3(-69.054f, 2.76f, 1.916f);
             mainCamera.transform.eulerAngles = new Vector3(0, 170.726f, 0);
             off = true;

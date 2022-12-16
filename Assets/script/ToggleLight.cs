@@ -7,7 +7,7 @@ public class ToggleLight : MonoBehaviour
 
     Light bossroomlight;
     public bool isOn;
-
+    public static bool off;
     // Use this for initialization
     void Start()
     {
@@ -20,6 +20,8 @@ public class ToggleLight : MonoBehaviour
         // Toggle light on/off when L key is pressed.
         if (Input.GetKeyUp(KeyCode.L))
         {
+            if (off)
+                return;
 
             bossroomlight.enabled = !bossroomlight.enabled;
             isOn = bossroomlight.enabled;
