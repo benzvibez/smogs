@@ -89,7 +89,12 @@ public class Algorithm
 
         if (attacking)
         {
-            
+            CamHub.singleton.hideOff = true;
+        } else
+            CamHub.singleton.hideOff = false;
+
+        if (attacking)
+        {
             if (!CamHub.singleton.hidden)
             {//dead
                 enemyController.StartCoroutine(Jumpscare());
@@ -190,6 +195,7 @@ public class Algorithm
     {
         if (attacking || preAttack)
             return 0;
+
         PreviousPreviousDedicatedTimeRange = PreviousDedicatedTimeRange;
         PreviousDedicatedTimeRange = DedicatedCurrentTimeRange;
 

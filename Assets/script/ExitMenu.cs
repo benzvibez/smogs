@@ -40,6 +40,15 @@ public class ExitMenu : MonoBehaviour
         Application.Quit();
     }
 
+    public void  StopCanvas()
+    {
+        GameConsole.singleton.DEBUG.SetActive(false);
+        GameConsole.singleton.noclipandcinematichelp.SetActive(false);
+        GameConsole.singleton.input.gameObject.SetActive(false);
+        CamHub.singleton.quickBar.gameObject.SetActive(false);
+        PowerController.singleton.gameObject.SetActive(false);
+    }
+
     public void StopEverything()
     {
         GameConsole.singleton.DEBUG.SetActive(false);

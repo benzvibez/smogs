@@ -58,6 +58,13 @@ public class CamHub : MonoBehaviour
     void Update()
     {
 
+        Vector2 resTarget = new Vector2(1920f, 1080f);
+        Vector2 resViewport = new Vector2(Screen.width, Screen.height);
+        Vector2 resNormalized = resTarget / resViewport; // target res in viewport space
+        Vector2 size = resNormalized / Mathf.Max(resNormalized.x, resNormalized.y);
+        foreach (var c in Cameras)
+        c.camera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
+        mainCamera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
         if (!overrideMins)
         {
             minL = min;
