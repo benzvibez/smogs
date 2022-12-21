@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour
     public GameObject Enemy;
     public GameObject DoorToRoom;
     public GameObject DeadImage;
+    public GameObject jumpscarePoint;
 
     public List<GameObject> AttackWanderPoints = new List<GameObject>();
 
@@ -244,7 +245,7 @@ public class Algorithm
     public int goingToRoomNextIndex = 0;
     public GameObject goingToRoomCurrentRoom;
     public bool attacking;
-    public int canAttack = 3;
+    public int canAttack = 1;
 
     public GameObject GenerateNextSpawnerIndex()
     {
@@ -265,7 +266,7 @@ public class Algorithm
             }
             else
             {
-                canAttack = 3;
+                canAttack = 1;
                 Debug.Log("Room approach started");
                 goingToRoom = true;
                 goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
@@ -356,7 +357,7 @@ public class Algorithm
         CamHub.singleton.hideOff = true;
         StopAttacking();
         CamHub.singleton.mainCamera.transform.LookAt(new Vector3(Enemy.transform.position.x, CamHub.singleton.mainCamera.transform.position.y, Enemy.transform.position.z));
-        Enemy.transform.position = new Vector3(CamHub.singleton.mainCamera.transform.position.x, Enemy.transform.position.y, CamHub.singleton.mainCamera.transform.position.z-1.5f); ;
+        Enemy.transform.position = enemyController.jumpscarePoint.transform.position;
         //play jumpscare sound here
         
         yield return new WaitForSeconds(2.5f);

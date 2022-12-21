@@ -29,14 +29,12 @@ public class ToggleLight : MonoBehaviour
             if (isOn)
             {
                 PowerController.singleton.UsageLevel += 1;
-                PowerController.singleton.additionalPower += 2;
-                Clock.singleton.clockAdditionalSpeed += 1;
+                PowerController.singleton.additionalPower += 4;
             }
             else
             {
                 PowerController.singleton.UsageLevel -= 1;
-                Clock.singleton.clockAdditionalSpeed -= 1;
-                PowerController.singleton.additionalPower -= 2;
+                PowerController.singleton.additionalPower -= 4;
             }
         }
     }

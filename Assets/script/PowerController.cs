@@ -50,7 +50,7 @@ public class PowerController : MonoBehaviour
                 GameConsole.singleton.POWERPERCENT.text = "POWER: "+powerRemaining;
                 GameConsole.singleton.POWERUSAGE.text = "USAGE: "+UsageLevel;
                 GameConsole.singleton.POWERMULTIPLIER.text = "POWER MULTIPLIER: "+additionalPower;
-                powerRemaining -= Time.deltaTime * 1f * additionalPower;
+                powerRemaining -= Time.deltaTime  * additionalPower;
                 DisplayPower(powerRemaining);
             }
             else
@@ -60,13 +60,20 @@ public class PowerController : MonoBehaviour
                 powerIsRunning = false;
                 ExitMenu.singleton.StopEverything();
                 ExitMenu.singleton.enabled = false;
-                //play loose msuic and shit here and jumpscare
-                losemusic.Play(); 
+                //play looooooose msuic and shit here and jumpscare scary scary scary scary
+                losemusic.Play();
+                StartCoroutine(GoToMenu());
+                
+
             }
         }
 
     }
-
+    public IEnumerator GoToMenu()
+    {
+        yield return new WaitForSeconds(10);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
     public void DisplayPower(float powerToDisplay)
     {
 

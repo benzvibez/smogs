@@ -502,7 +502,7 @@ public class GameConsole : MonoBehaviour
             EnemyController.singleton.ALG.Move();
         } else
         {
-            EnemyController.singleton.ALG.canAttack = 3;
+            EnemyController.singleton.ALG.canAttack = 1;
             EnemyController.singleton.ALG.Move();
         }
 
