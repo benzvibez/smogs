@@ -75,12 +75,7 @@ public class GameConsole : MonoBehaviour
 
         float minutes = Mathf.FloorToInt(Time.unscaledTime / 60);
         float seconds = Mathf.FloorToInt(Time.unscaledTime % 60);
-        TIMESINCESTART.text = "TIME SINCE GAME START: " + minutes + ":"+ seconds;
-
-        if (DiscordController.singleton.isDiscordAvailable)
-        {
-            DISCORDUSER.text = "DISCORD USER: " + DiscordController.singleton.GetDiscordUsername();
-        }
+        TIMESINCESTART.text = "TIME SINCE GAME START: " + minutes + ":" + seconds;
 
         if (Camera.main != null)
         {

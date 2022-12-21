@@ -19,7 +19,7 @@ public class AnimeController : MonoBehaviour
     {
         var idle = animeController.GetBool("idle");
         var walking = animeController.GetBool("walking");
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             if (idle && !walking)
             {
