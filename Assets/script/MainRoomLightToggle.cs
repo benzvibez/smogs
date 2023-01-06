@@ -6,6 +6,8 @@ public class MainRoomLightToggle : MonoBehaviour
 {
 
     public Light breakroomlight;
+    public static bool on;
+
 
     public void OnMouseDown()
     {
@@ -13,10 +15,11 @@ public class MainRoomLightToggle : MonoBehaviour
         if (breakroomlight.enabled)
         {
             transform.eulerAngles = new Vector3(-122, 90, 0);
-
+            on = true;
         }
         else
         {
+            on = false;
             transform.eulerAngles = new Vector3(-60, 90, 0);
         }
 

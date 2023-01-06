@@ -47,10 +47,10 @@ public class PowerController : MonoBehaviour
 
             if (powerRemaining > 0)
             {
-                GameConsole.singleton.POWERPERCENT.text = "POWER: "+powerRemaining;
-                GameConsole.singleton.POWERUSAGE.text = "USAGE: "+UsageLevel;
-                GameConsole.singleton.POWERMULTIPLIER.text = "POWER MULTIPLIER: "+additionalPower;
-                powerRemaining -= Time.deltaTime  * additionalPower;
+                GameConsole.singleton.POWERPERCENT.text = "POWER: " + powerRemaining;
+                GameConsole.singleton.POWERUSAGE.text = "USAGE: " + UsageLevel;
+                GameConsole.singleton.POWERMULTIPLIER.text = "POWER MULTIPLIER: " + additionalPower;
+                powerRemaining -= Time.deltaTime * additionalPower;
                 DisplayPower(powerRemaining);
             }
             else
@@ -61,9 +61,11 @@ public class PowerController : MonoBehaviour
                 ExitMenu.singleton.StopEverything();
                 ExitMenu.singleton.enabled = false;
                 //play looooooose msuic and shit here and jumpscare scary scary scary scary
-                losemusic.Play();
+
+
+
                 StartCoroutine(GoToMenu());
-                
+
 
             }
         }
@@ -71,8 +73,19 @@ public class PowerController : MonoBehaviour
     }
     public IEnumerator GoToMenu()
     {
-        yield return new WaitForSeconds(10);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        losemusic.Play();
+        yield return new WaitForSeconds(3);
+
+        losemusic.Stop();
+        StartCoroutine(EnemyController.singleton.ALG.Jumpscare((done) =>
+        {
+            if (done)
+            {
+                //UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+            }
+        }
+        ));
+
     }
     public void DisplayPower(float powerToDisplay)
     {

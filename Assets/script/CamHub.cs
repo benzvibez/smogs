@@ -63,7 +63,7 @@ public class CamHub : MonoBehaviour
         Vector2 resNormalized = resTarget / resViewport; // target res in viewport space
         Vector2 size = resNormalized / Mathf.Max(resNormalized.x, resNormalized.y);
         foreach (var c in Cameras)
-        c.camera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
+            c.camera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
         mainCamera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
         if (!overrideMins)
         {
@@ -112,7 +112,7 @@ public class CamHub : MonoBehaviour
 
     public bool hidden;
     public bool hideOff;
-    public void Hide(TextMeshProUGUI txt)
+    public void Hide(TextMeshProUGUI txt = null)
     {
         if (hideOff)
             return;
@@ -121,15 +121,18 @@ public class CamHub : MonoBehaviour
         {
             off = false;
             quickBar.SetActive(true);
-            txt.text = "HIDE";
+            if (txt)
+                txt.text = "HIDE";
             hidden = false;
             mainCamera.transform.position = new Vector3(-70.195f, 4.334f, 1.916f);
             mainCamera.transform.eulerAngles = new Vector3(0, 147.73f, 0);
-        } else
+        }
+        else
         {
             hidden = true;
             quickBar.SetActive(false);
-            txt.text = "UNHIDE";
+            if (txt)
+                txt.text = "UNHIDE";
             if (!mainCamera.enabled)
                 CamerasED();
 

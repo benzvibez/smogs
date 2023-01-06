@@ -97,13 +97,11 @@ public class Algorithm
 
         if (attacking)
         {
-            if (!CamHub.singleton.hidden)
+            if (!CamHub.singleton.hidden || MainRoomLightToggle.on)
             {//dead
                 enemyController.StartCoroutine(Jumpscare());
             }
         }
-
-        Debug.Log(enemyController.DoorToRoom.transform.eulerAngles.y);
 
         if (move)
             CheckForNextPoint();
@@ -351,20 +349,26 @@ public class Algorithm
         }
     }
 
-    public IEnumerator Jumpscare()
+    public IEnumerator Jumpscare(System.Action<bool> callback = null)
     {
         if (!CamHub.singleton.mainCamera.enabled)
             CamHub.singleton.CamerasED();
+
+        if (CamHub.singleton.hidden && MainRoomLightToggle.on)
+            CamHub.singleton.Hide();
+
         CamHub.off = true;
         CamHub.singleton.hideOff = true;
         StopAttacking();
-        CamHub.singleton.mainCamera.transform.LookAt(new Vector3(Enemy.transform.position.x, CamHub.singleton.mainCamera.transform.position.y, Enemy.transform.position.z));
         Enemy.transform.position = enemyController.jumpscarePoint.transform.position;
+        CamHub.singleton.mainCamera.transform.LookAt(new Vector3(Enemy.transform.position.x, CamHub.singleton.mainCamera.transform.position.y, Enemy.transform.position.z));
         //play jumpscare sound here
 
         yield return new WaitForSeconds(2.5f);
         enemyController.DeadImage.SetActive(true);
+        yield return new WaitForSeconds(3.5f);
         ExitMenu.singleton.StopEverything();
+        callback(true);
     }
 
     public List<Light> cachedLightData = new();
@@ -383,7 +387,7 @@ public class Algorithm
 
 
 
-        if (!CamHub.singleton.hidden)
+        if (!CamHub.singleton.hidden || MainRoomLightToggle.on)
         {//dead
             enemyController.StartCoroutine(Jumpscare());
             AnimeController.singleton.SwitchAnim("idle-walk", false);
