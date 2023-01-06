@@ -62,7 +62,7 @@ public class Algorithm
     public int Min;
     public int Max;
 
-    
+
 
     public bool Cooldown;
 
@@ -81,7 +81,7 @@ public class Algorithm
     public bool move;
     public bool Run()
     {
-        
+
 
         if (preAttack)
             DoorOpenAnim();
@@ -91,7 +91,8 @@ public class Algorithm
         if (attacking)
         {
             CamHub.singleton.hideOff = true;
-        } else
+        }
+        else
             CamHub.singleton.hideOff = false;
 
         if (attacking)
@@ -186,10 +187,10 @@ public class Algorithm
             StaticFX.singleton.staticness.color = cachedStaticAlpha;
 
             Cooldown = false;
-        }    
+        }
         else
             yield return false;
-        
+
     }
 
     public int GenerateDedicatedTimeRange()
@@ -288,10 +289,10 @@ public class Algorithm
             {
                 Debug.Log("Attacking player");
                 enemyController.StartCoroutine(AttackPlayer());
-                NextSpawner = RouteToRoom[goingToRoomNextIndex-1];
+                NextSpawner = RouteToRoom[goingToRoomNextIndex - 1];
                 Move(true);
                 return RouteToRoom[goingToRoomNextIndex];
-            } 
+            }
             else
             {
                 goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
@@ -343,7 +344,8 @@ public class Algorithm
         if (movingToPoint)
         {
             Enemy.transform.position = Vector3.MoveTowards(Enemy.transform.position, point.transform.position, 0.2f);
-        } else
+        }
+        else
         {
             enemyController.StartCoroutine(AttackWonderAnim());
         }
@@ -359,7 +361,7 @@ public class Algorithm
         CamHub.singleton.mainCamera.transform.LookAt(new Vector3(Enemy.transform.position.x, CamHub.singleton.mainCamera.transform.position.y, Enemy.transform.position.z));
         Enemy.transform.position = enemyController.jumpscarePoint.transform.position;
         //play jumpscare sound here
-        
+
         yield return new WaitForSeconds(2.5f);
         enemyController.DeadImage.SetActive(true);
         ExitMenu.singleton.StopEverything();
@@ -375,6 +377,7 @@ public class Algorithm
         move = true;
         attacking = true;
         //OFFICALLY IN ROOM ATTACKING
+        AnimeController.singleton.SwitchAnim("idle-walk", true);
         NextSpawner = RouteToRoom[4];
         Move(true);
 
@@ -383,7 +386,10 @@ public class Algorithm
         if (!CamHub.singleton.hidden)
         {//dead
             enemyController.StartCoroutine(Jumpscare());
-        } else {
+            AnimeController.singleton.SwitchAnim("idle-walk", false);
+        }
+        else
+        {
 
 
             enemyController.StartCoroutine(AttackWonderAnim());
@@ -397,6 +403,7 @@ public class Algorithm
             movingToPoint = false;
             goingToRoom = false;
             enemyController.DoorToRoom.transform.Rotate(new Vector3(0, 0, 4));
+            AnimeController.singleton.SwitchAnim("idle-walk", false);
             LeavingRoom = true;
             Start();
         }
@@ -412,7 +419,7 @@ public class Algorithm
         movingToPoint = false;
         goingToRoom = false;
     }
-    
+
     public bool enteredRoom;
 
     public IEnumerator AttackWonderAnim()

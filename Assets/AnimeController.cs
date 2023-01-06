@@ -8,20 +8,20 @@ using UnityEngine.Animations;
 public class AnimeController : MonoBehaviour
 {
     public Animator animeController;
+    public static AnimeController singleton;
     // Start is called before the first frame update
     void Start()
     {
+        singleton = this;
         animeController = GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void Update()
+    public void SwitchAnim(string anim, bool on)
     {
-        var idle = animeController.GetBool("idle");
-        var walking = animeController.GetBool("walking");
-        if (Input.GetKeyDown(KeyCode.O))
+        if (anim == "idle-walk")
         {
-            if (idle && !walking)
+            if (on)
             {
                 animeController.SetBool("walking", true);
                 animeController.SetBool("idle", false);
