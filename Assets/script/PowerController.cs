@@ -8,13 +8,13 @@ using UnityEngine.UI;
 public class PowerController : MonoBehaviour
 {
     public static PowerController singleton;
-    public float powerTimeInSeconds = 1440;
+    public float powerTimeInSeconds = 2440;
     public float powerRemaining;
     public bool powerIsRunning;
     public TextMeshProUGUI powerText;
     public AudioSource losemusic;
     public RawImage usageImg;
-
+    bool off;
     public List<Texture> usageMeters = new(); // 0-4 (1-5)
 
     private float flashTimerRemainder = 0.3f;
@@ -22,7 +22,6 @@ public class PowerController : MonoBehaviour
     public void Start()
     {
         powerRemaining = powerTimeInSeconds;
-        powerIsRunning = true;
     }
 
     private void Awake()
@@ -34,6 +33,7 @@ public class PowerController : MonoBehaviour
     public float additionalPower = 1;
     public void Update()
     {
+
         usageImg.texture = usageImg.texture = usageMeters[(int)UsageLevel]; // since this is zero-based we minus one.
         if (powerIsRunning)
         {
@@ -53,8 +53,9 @@ public class PowerController : MonoBehaviour
                 powerRemaining -= Time.deltaTime * additionalPower;
                 DisplayPower(powerRemaining);
             }
-            else
+            else if (!off)
             {
+                off = true;
                 Debug.Log("Power ran out");
                 powerRemaining = 0;
                 powerIsRunning = false;
@@ -74,7 +75,11 @@ public class PowerController : MonoBehaviour
     public IEnumerator GoToMenu()
     {
         losemusic.Play();
-        yield return new WaitForSeconds(3);
+        OptionLoader.Loader.AllLights.ForEach(light =>
+        {
+            light.enabled = false;
+        });
+        yield return new WaitForSeconds(7);
 
         losemusic.Stop();
         StartCoroutine(EnemyController.singleton.ALG.Jumpscare((done) =>

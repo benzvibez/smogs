@@ -33,27 +33,21 @@ public class Clock : MonoBehaviour
 
     public static Clock singleton;
     public float timeRemaining = 0;
-    public bool timerIsRunning;
+    public static bool timerIsRunning;
     public TextMeshProUGUI timeText;
     public float clockAdditionalSpeed = 2.5f;
-
-    public void Start()
-    {
-        // Starts the timer automatically
-        timerIsRunning = true;
-    }
 
     public void Update()
     {
 
         if (timerIsRunning && !stoppedTimer)
         {
-            if (timeRemaining <= 360)
+            if (timeRemaining <= 500)
             {
                 timeRemaining += Time.deltaTime * clockAdditionalSpeed;
                 DisplayTime(timeRemaining);
             }
-            else
+            else if (timerIsRunning)
             {
                 Debug.Log("Time has run out!");
                 timeRemaining = 0;
@@ -64,7 +58,7 @@ public class Clock : MonoBehaviour
                 dingdong.Play();
             }
         }
-        else
+        else if (timerIsRunning)
         {
             timeText.text = $"fr ong";
         }

@@ -7,10 +7,14 @@ public class MainRoomLightToggle : MonoBehaviour
 
     public Light breakroomlight;
     public static bool on;
+    public static bool off;
 
 
     public void OnMouseDown()
     {
+        if (off)
+            return;
+
         breakroomlight.enabled = !breakroomlight.enabled;
         if (breakroomlight.enabled)
         {

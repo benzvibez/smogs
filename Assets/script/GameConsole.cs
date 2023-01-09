@@ -281,7 +281,7 @@ public class GameConsole : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = true;
                 CamHub.singleton.camOverlay.SetActive(false);
-                Clock.singleton.timerIsRunning = true;
+                Clock.timerIsRunning = true;
                 Clock.singleton.timeText.gameObject.SetActive(true);
                 CamHub.singleton.quickBar.SetActive(true);
                 input.text = "Resumed";
@@ -502,7 +502,7 @@ public class GameConsole : MonoBehaviour
             EnemyController.singleton.ALG.Move();
         } else
         {
-            EnemyController.singleton.ALG.canAttack = 1;
+            EnemyController.singleton.ALG.canAttack = 0;
             EnemyController.singleton.ALG.Move();
         }
 
@@ -543,7 +543,7 @@ public class GameConsole : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             CamHub.singleton.camOverlay.SetActive(false);
-            Clock.singleton.timerIsRunning = false;
+            Clock.timerIsRunning = false;
             Clock.singleton.timeText.gameObject.SetActive(false);
             CamHub.singleton.quickBar.SetActive(false);
             input.text = "";
@@ -558,6 +558,7 @@ public class GameConsole : MonoBehaviour
     public void reload()
     {
         input.text = "reloading game";
+        SceneManager.UnloadSceneAsync("Game");
         SceneManager.LoadScene("Game");
     }
 

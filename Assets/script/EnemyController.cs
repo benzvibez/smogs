@@ -7,6 +7,7 @@ using System.Linq;
 
 public class EnemyController : MonoBehaviour
 {
+    public AudioSource jumpscaresoundFX;
     public GameObject Enemy;
     public GameObject DoorToRoom;
     public GameObject DeadImage;
@@ -20,10 +21,10 @@ public class EnemyController : MonoBehaviour
 
     public static EnemyController singleton;
 
-    public int MoveRangeMin = 13;
-    public int MoveRangeMax = 28;
+    public int MoveRangeMin = 6;
+    public int MoveRangeMax = 15;
 
-    public int RangeInflate = 3;
+    public int RangeInflate = 2;
     public int RangeDeflate = 5;
 
     public int RangeRandomizerAttempts = 30;
@@ -45,7 +46,8 @@ public class EnemyController : MonoBehaviour
 
     private void Update()
     {
-        ALG.Run();
+        if (PhoneController.ready)
+            ALG.Run();
     }
 
 }
@@ -203,10 +205,17 @@ public class Algorithm
         {
             var _DedicatedCurrentTimeRange = Mathf.RoundToInt(Random.Range(Min, Max));
 
+            if (_DedicatedCurrentTimeRange > 8 && _DedicatedCurrentTimeRange < 10)
+            {
+                enemyController.StartCoroutine(Radio.singleton.StartRadio());
+            }
+
             if (_DedicatedCurrentTimeRange == PreviousDedicatedTimeRange + RangeInflate || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange - RangeDeflate || _DedicatedCurrentTimeRange == PreviousPreviousDedicatedTimeRange || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange)
                 continue;
             else
                 return _DedicatedCurrentTimeRange;
+
+
         }
         Debug.LogWarning("ALG: failed to randomize next teleport time range. defaulting to the same time range as previously applied.");
         return DedicatedCurrentTimeRange;
@@ -244,7 +253,8 @@ public class Algorithm
     public int goingToRoomNextIndex = 0;
     public GameObject goingToRoomCurrentRoom;
     public bool attacking;
-    public int canAttack = 1;
+    public int canAttack = 3;
+    public bool overrideAttack;
 
     public GameObject GenerateNextSpawnerIndex()
     {
@@ -252,20 +262,21 @@ public class Algorithm
             return null;
 
         var type = Random.Range(0, 32);
-        if (type > 26)
+        if (type > 26 && !goingToRoom && !overrideAttack)
         {
             return RegisteredSpawners[Random.Range(RangeDeflate - RangeInflate + 1, RegisteredSpawners.Count)];
         }
-        else if (type > 0 && type < 21 && !goingToRoom && !LeavingRoom) //high chance that it will go on approach to office
+        else if (type > 0 && type < 16 && !goingToRoom && !LeavingRoom || overrideAttack) //high chance that it will go on approach to office
         {
-            if (canAttack != 0)
+            if (canAttack != 0 && !overrideAttack)
             {
                 canAttack--;
                 return GetClosestSpawner();
             }
             else
             {
-                canAttack = 1;
+                overrideAttack = false;
+                canAttack = 3;
                 Debug.Log("Room approach started");
                 goingToRoom = true;
                 goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
@@ -311,11 +322,11 @@ public class Algorithm
             }
             else
             {
-                goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
+                goingToRoomCurrentRoom = RegisteredSpawners[2];
                 return goingToRoomCurrentRoom;
             }
         }
-        else if (type > 0 && type < 25 && !goingToRoom) // high chance that it will go to nearest spawner regions
+        else if (type > 16 && type < 25 && !goingToRoom) // high chance that it will go to nearest spawner regions
             return GetClosestSpawner();
 
         return GetClosestSpawner();
@@ -351,24 +362,29 @@ public class Algorithm
 
     public IEnumerator Jumpscare(System.Action<bool> callback = null)
     {
+        Radio.singleton.radioMusic.volume = 0;
+
         if (!CamHub.singleton.mainCamera.enabled)
             CamHub.singleton.CamerasED();
 
-        if (CamHub.singleton.hidden && MainRoomLightToggle.on)
+        if (CamHub.singleton.hidden)
             CamHub.singleton.Hide();
 
         CamHub.off = true;
         CamHub.singleton.hideOff = true;
+        PhoneController.singleton.DeclineCall();
         StopAttacking();
         Enemy.transform.position = enemyController.jumpscarePoint.transform.position;
         CamHub.singleton.mainCamera.transform.LookAt(new Vector3(Enemy.transform.position.x, CamHub.singleton.mainCamera.transform.position.y, Enemy.transform.position.z));
         //play jumpscare sound here
-
-        yield return new WaitForSeconds(2.5f);
+        enemyController.jumpscaresoundFX.Play();
+        yield return new WaitForSeconds(enemyController.jumpscaresoundFX.clip.length + 0.25f);
         enemyController.DeadImage.SetActive(true);
-        yield return new WaitForSeconds(3.5f);
         ExitMenu.singleton.StopEverything();
+        yield return new WaitForSeconds(1.5f);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         callback(true);
+
     }
 
     public List<Light> cachedLightData = new();
@@ -378,10 +394,19 @@ public class Algorithm
     {
         preAttack = true;
         yield return new WaitForSeconds(enemyController.AttackRealizationTime);
+        MainRoomLightToggle.off = true;
+        ToggleLight.off = true;
+        OptionLoader.Loader.AllLights.ForEach(light =>
+        {
+            if (!light.name.Contains("22"))
+                light.enabled = false;
+        });
         move = true;
         attacking = true;
         //OFFICALLY IN ROOM ATTACKING
         AnimeController.singleton.SwitchAnim("idle-walk", true);
+        Radio.singleton.StopRadio();
+
         NextSpawner = RouteToRoom[4];
         Move(true);
 
@@ -399,6 +424,13 @@ public class Algorithm
             enemyController.StartCoroutine(AttackWonderAnim());
 
             yield return new WaitForSeconds(attackTime);
+            OptionLoader.Loader.AllLights.ForEach(light =>
+            {
+                if (!light.name.Contains("23") && !light.name.Contains("22"))
+                    light.enabled = true;
+            });
+            MainRoomLightToggle.off = false;
+            ToggleLight.off = false;
             preAttack = false;
             move = false;
             attacking = false;

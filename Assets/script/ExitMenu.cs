@@ -51,6 +51,7 @@ public class ExitMenu : MonoBehaviour
 
     public void StopEverything()
     {
+        Radio.singleton.AuditabilityLevelText.gameObject.SetActive(false);
         GameConsole.singleton.DEBUG.SetActive(false);
         GameConsole.singleton.noclipandcinematichelp.SetActive(false);
         GameConsole.singleton.input.gameObject.SetActive(false);

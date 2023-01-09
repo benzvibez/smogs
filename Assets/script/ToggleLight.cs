@@ -4,38 +4,40 @@ using UnityEngine;
 
 public class ToggleLight : MonoBehaviour
 {
-
-    Light bossroomlight;
-    public bool isOn;
+    public AudioSource a;
+    public Light bossroomlight;
+    public GameObject BTN;
+    public Light BTN_Light;
+    public static bool isOn;
     public static bool off;
-    // Use this for initialization
-    void Start()
-    {
-        bossroomlight = GetComponent<Light>();
-    }
 
-    // Update is called once per frame
-    void Update()
+
+
+    void OnMouseDown()
     {
-        // Toggle light on/off when L key is pressed.
-        if (Input.GetKeyUp(KeyCode.L))
+        if (off)
         {
-            if (off)
-                return;
+            BTN_Light.enabled = false;
+            a.Stop();
+            return;
+        }
 
-            bossroomlight.enabled = !bossroomlight.enabled;
-            isOn = bossroomlight.enabled;
+        bossroomlight.enabled = !bossroomlight.enabled;
+        isOn = bossroomlight.enabled;
 
-            if (isOn)
-            {
-                PowerController.singleton.UsageLevel += 1;
-                PowerController.singleton.additionalPower += 4;
-            }
-            else
-            {
-                PowerController.singleton.UsageLevel -= 1;
-                PowerController.singleton.additionalPower -= 4;
-            }
+        if (isOn)
+        {
+            a.Play();
+            BTN_Light.enabled = true;
+            PowerController.singleton.UsageLevel += 1;
+            PowerController.singleton.additionalPower += 4;
+        }
+        else
+        {
+            a.Stop();
+            BTN_Light.enabled = false;
+            PowerController.singleton.UsageLevel -= 1;
+            PowerController.singleton.additionalPower -= 4;
         }
     }
 }

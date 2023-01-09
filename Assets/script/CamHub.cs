@@ -12,6 +12,7 @@ public class CamHub : MonoBehaviour
     public TextMeshProUGUI currentCam;
     public TextMeshProUGUI currentCamRoom;
     public GameObject quickBar;
+    public GameObject Hidebar;
     public AudioSource cameraChangeSoundFX;
 
 
@@ -21,6 +22,8 @@ public class CamHub : MonoBehaviour
     public bool isLookingAtCams = false; //start with cameras disabled
     public int CurrentlyOn = 0; //start at camera 1
     public float mainCameraRotationSpeed; //the rotation speed of the main camera L/R
+    public float ClampLeft;
+    public float ClampRight;
 
     [Serializable]
     public struct CameraStructure
@@ -44,13 +47,13 @@ public class CamHub : MonoBehaviour
 
     private void Awake()
     {
+        singleton = this;
         Application.targetFrameRate = 100;
     }
 
     private void Start()
     {
         cameraAmount = Cameras.Length - 1;
-        singleton = this;
         Cursor.lockState = CursorLockMode.Confined;//start the game with the cursor confined to game screen
     }
     internal static bool off;
@@ -80,11 +83,6 @@ public class CamHub : MonoBehaviour
             camerasInverted = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !off) //detect if space is pressed
-        {
-            CamerasED();
-        }
-
         if (!isLookingAtCams && mainCamera.enabled && !GameConsole.cinematic && !off) // true if plaer is not looking at cams and the main cmaera is enabled
         {
             Vector3 mousePosition = mainCamera.ScreenToViewportPoint(Input.mousePosition);
@@ -100,10 +98,16 @@ public class CamHub : MonoBehaviour
              whichever side it may be on, move that direction.*/
             if (mousePosition.x < minL && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
+                if (mainCamera.transform.eulerAngles.y <= ClampLeft)
+                    return;
+
                 mainCamera.transform.Rotate(new Vector3(0, -mainCameraRotationSpeed, 0 * 3));
             }
             else if (mousePosition.x > minR && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
             {
+                if (mainCamera.transform.eulerAngles.y >= ClampRight)
+                    return;
+
                 mainCamera.transform.Rotate(new Vector3(0, mainCameraRotationSpeed, 0 * 3));
             }
         }
@@ -130,6 +134,7 @@ public class CamHub : MonoBehaviour
         else
         {
             hidden = true;
+            Radio.singleton.Hidden();
             quickBar.SetActive(false);
             if (txt)
                 txt.text = "UNHIDE";
@@ -195,7 +200,8 @@ public class CamHub : MonoBehaviour
 
     public void QuickClose()
     {
-        CamerasED();
+        if (!hidden && !off)
+            CamerasED();
     }
 
     public void CamerasED()
@@ -206,6 +212,7 @@ public class CamHub : MonoBehaviour
         cameraChangeSoundFX.Play();
         if (isLookingAtCams)
         {
+            hideOff = false;
             PowerController.singleton.UsageLevel -= 3;
             PowerController.singleton.additionalPower -= 5;
             cameraChangeSoundFX.Play();
@@ -219,6 +226,7 @@ public class CamHub : MonoBehaviour
         }
         else
         {
+            hideOff = true;
             PowerController.singleton.UsageLevel += 3;
             PowerController.singleton.additionalPower += 5;
             currentCam.text = Cameras[CurrentlyOn].camera.gameObject.name;
