@@ -35,14 +35,14 @@ public class Clock : MonoBehaviour
     public float timeRemaining = 0;
     public static bool timerIsRunning;
     public TextMeshProUGUI timeText;
-    public float clockAdditionalSpeed = 2.5f;
+    public float clockAdditionalSpeed = 2f;
 
     public void Update()
     {
 
         if (timerIsRunning && !stoppedTimer)
         {
-            if (timeRemaining <= 500)
+            if (timeRemaining <= 600)
             {
                 timeRemaining += Time.deltaTime * clockAdditionalSpeed;
                 DisplayTime(timeRemaining);

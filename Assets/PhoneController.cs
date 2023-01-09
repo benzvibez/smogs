@@ -65,6 +65,8 @@ public class PhoneController : MonoBehaviour
         phoneguy.Stop();
         startPhoneAnimDown = true;
         StartGame();
+        ready = true;
+        Radio.singleton.OFF = false;
     }
 
     public void AcceptCall()
@@ -80,6 +82,8 @@ public class PhoneController : MonoBehaviour
     {
         phoneguy.Play();
         yield return new WaitForSeconds(phoneguy.clip.length+1);
+        ready = true;
+        Radio.singleton.OFF = false;
         startPhoneAnimDown = true;
     }
 
@@ -91,6 +95,5 @@ public class PhoneController : MonoBehaviour
         CamHub.singleton.quickBar.SetActive(true);
         CamHub.singleton.Hidebar.SetActive(true);
         PowerController.singleton.gameObject.SetActive(true);
-        ready = true;
     }
 }

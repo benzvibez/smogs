@@ -12,6 +12,8 @@ public class Radio : MonoBehaviour
     public static Radio singleton;
     public int AuditabilityLevel = 0;
     public TextMeshProUGUI AuditabilityLevelText;
+    public int canRadio = 3;
+    public bool OFF = true;
 
     private void Awake()
     {
@@ -22,11 +24,14 @@ public class Radio : MonoBehaviour
 
     public void Hidden()
     {
-        StartCoroutine(TimesUpHider());
+        if (!OFF)
+            StartCoroutine(TimesUpHider());
     }
 
     public IEnumerator TimesUpHider()
     {
+        if (OFF)
+            yield return null;
 
         yield return new WaitForSeconds(timeToCatchRadio - 4);
 
@@ -71,6 +76,9 @@ public class Radio : MonoBehaviour
 
     public IEnumerator StartRadio(bool ovr = false)
     {
+        if (OFF)
+            yield return null;
+
         if (!radioOff && !ovr)
             yield return null;
 

@@ -207,7 +207,15 @@ public class Algorithm
 
             if (_DedicatedCurrentTimeRange > 8 && _DedicatedCurrentTimeRange < 10)
             {
-                enemyController.StartCoroutine(Radio.singleton.StartRadio());
+                if (Radio.singleton.canRadio != 0)
+                {
+                    Radio.singleton.canRadio--;
+                }
+                else
+                {
+                    Radio.singleton.canRadio = 3;
+                    enemyController.StartCoroutine(Radio.singleton.StartRadio());
+                }
             }
 
             if (_DedicatedCurrentTimeRange == PreviousDedicatedTimeRange + RangeInflate || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange - RangeDeflate || _DedicatedCurrentTimeRange == PreviousPreviousDedicatedTimeRange || _DedicatedCurrentTimeRange == PreviousDedicatedTimeRange)
@@ -382,6 +390,7 @@ public class Algorithm
         enemyController.DeadImage.SetActive(true);
         ExitMenu.singleton.StopEverything();
         yield return new WaitForSeconds(1.5f);
+        CamHub.off = false;
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         callback(true);
 
