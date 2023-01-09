@@ -26247,9 +26247,9 @@ MonoBehaviour:
   mainCamera: {fileID: 963194227}
   isLookingAtCams: 0
   CurrentlyOn: 0
-  mainCameraRotationSpeed: 0.19
+  mainCameraRotationSpeed: 0.6
   ClampLeft: 83.511
-  ClampRight: 192.571
+  ClampRight: 180.98
   Cameras:
   - camera: {fileID: 1223440019}
     room: Dining Area
@@ -73187,8 +73187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d876dec9bf56c2840aa30c4f6d7ed362, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  a: {fileID: 0}
-  clicked: 0
 --- !u!1001 &2074505305
 PrefabInstance:
   m_ObjectHideFlags: 0
