@@ -12,7 +12,7 @@ public class Radio : MonoBehaviour
     public static Radio singleton;
     public int AuditabilityLevel = 0;
     public TextMeshProUGUI AuditabilityLevelText;
-    public int canRadio = 3;
+    public int canRadio = 1;
     public bool OFF = true;
 
     private void Awake()

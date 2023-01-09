@@ -205,7 +205,7 @@ public class Algorithm
         {
             var _DedicatedCurrentTimeRange = Mathf.RoundToInt(Random.Range(Min, Max));
 
-            if (_DedicatedCurrentTimeRange > 8 && _DedicatedCurrentTimeRange < 10)
+            if (_DedicatedCurrentTimeRange > 8 && _DedicatedCurrentTimeRange < 12)
             {
                 if (Radio.singleton.canRadio != 0)
                 {
@@ -213,7 +213,7 @@ public class Algorithm
                 }
                 else
                 {
-                    Radio.singleton.canRadio = 3;
+                    Radio.singleton.canRadio = 1;
                     enemyController.StartCoroutine(Radio.singleton.StartRadio());
                 }
             }
