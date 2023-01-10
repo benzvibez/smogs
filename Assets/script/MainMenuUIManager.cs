@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class MainMenuUIManager : MonoBehaviour
 {
@@ -49,6 +50,35 @@ public class MainMenuUIManager : MonoBehaviour
 
     public void Play()
     {
+        StartCoroutine(StartGame());
+    }
+
+    public Image img;
+    public bool started;
+    public float LerpFade;
+    internal float add;
+
+    private void Update()
+    {
+        if (started)
+        {
+            LerpFade = Mathf.Lerp(0, 1, add += 0.007f);
+            Color c = img.color;
+            c.a = LerpFade;
+            img.color = c;
+            loading.transform.Rotate(new Vector3(1,1,1) * 1f);
+        }
+    }
+
+    public RawImage loading;
+
+    public IEnumerator StartGame()
+    {
+        img.gameObject.SetActive(true);
+        started = true;
+        yield return new WaitForSeconds(7);
+        loading.transform.parent.gameObject.SetActive(true);
+        yield return new WaitForSeconds(5);
         SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 
