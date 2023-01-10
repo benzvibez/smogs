@@ -156,6 +156,9 @@ public class Algorithm
     public Color cachedStaticAlpha;
     public void Move(bool Override = false)
     {
+        if (GameConsole.cinematic)
+            return;
+
         if (attacking || preAttack && !Override)
             return;
 
@@ -205,7 +208,7 @@ public class Algorithm
         {
             var _DedicatedCurrentTimeRange = Mathf.RoundToInt(Random.Range(Min, Max));
 
-            if (_DedicatedCurrentTimeRange > 8 && _DedicatedCurrentTimeRange < 12)
+            if (_DedicatedCurrentTimeRange > 7 && _DedicatedCurrentTimeRange < 15)
             {
                 if (Radio.singleton.canRadio != 0)
                 {
@@ -261,7 +264,7 @@ public class Algorithm
     public int goingToRoomNextIndex = 0;
     public GameObject goingToRoomCurrentRoom;
     public bool attacking;
-    public int canAttack = 3;
+    public int canAttack = 0;
     public bool overrideAttack;
 
     public GameObject GenerateNextSpawnerIndex()
@@ -270,11 +273,11 @@ public class Algorithm
             return null;
 
         var type = Random.Range(0, 32);
-        if (type > 26 && !goingToRoom && !overrideAttack)
+        if (type > 30 && !goingToRoom && !overrideAttack)
         {
-            return RegisteredSpawners[Random.Range(RangeDeflate - RangeInflate + 1, RegisteredSpawners.Count)];
+            return RegisteredSpawners[Random.Range(0, RegisteredSpawners.Count)];
         }
-        else if (type > 0 && type < 16 && !goingToRoom && !LeavingRoom || overrideAttack) //high chance that it will go on approach to office
+        else if (type > 0 && type < 26 && !goingToRoom && !LeavingRoom || overrideAttack) //high chance that it will go on approach to office
         {
             if (canAttack != 0 && !overrideAttack)
             {
@@ -284,7 +287,7 @@ public class Algorithm
             else
             {
                 overrideAttack = false;
-                canAttack = 3;
+                canAttack = 0;
                 Debug.Log("Room approach started");
                 goingToRoom = true;
                 goingToRoomCurrentRoom = RouteToRoom[goingToRoomNextIndex];
@@ -334,7 +337,7 @@ public class Algorithm
                 return goingToRoomCurrentRoom;
             }
         }
-        else if (type > 16 && type < 25 && !goingToRoom) // high chance that it will go to nearest spawner regions
+        else if (type > 26 && type < 30 && !goingToRoom) // high chance that it will go to nearest spawner regions
             return GetClosestSpawner();
 
         return GetClosestSpawner();
@@ -370,6 +373,9 @@ public class Algorithm
 
     public IEnumerator Jumpscare(System.Action<bool> callback = null)
     {
+        if (!PhoneController.ready)
+            yield return null;
+
         Radio.singleton.radioMusic.volume = 0;
 
         if (!CamHub.singleton.mainCamera.enabled)
@@ -390,10 +396,19 @@ public class Algorithm
         enemyController.DeadImage.SetActive(true);
         ExitMenu.singleton.StopEverything();
         yield return new WaitForSeconds(1.5f);
-        CamHub.off = false;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-        callback(true);
 
+        MainRoomLightToggle.off = false;
+        ToggleLight.off = false;
+        Radio.singleton.OFF = false;
+        SanityController.singleton.gameObject.SetActive(true);
+        SanityController.singleton.sanityIsRunning = true;
+        Radio.singleton.AuditabilityLevelText.gameObject.SetActive(true);
+        Clock.timerIsRunning = true;
+        PowerController.singleton.powerIsRunning = true;
+        PowerController.singleton.gameObject.SetActive(true);
+
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
     }
 
     public List<Light> cachedLightData = new();

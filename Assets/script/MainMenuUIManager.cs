@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class MainMenuUIManager : MonoBehaviour
 {
-
     public GameObject options;
     public GameObject quit;
 
@@ -18,19 +17,19 @@ public class MainMenuUIManager : MonoBehaviour
     public TMP_Dropdown quality;
     public TMP_Dropdown audioMode;
 
-    private void Update()
-    {
-        Vector2 resTarget = new Vector2(1920f, 1080f);
-        Vector2 resViewport = new Vector2(Screen.width, Screen.height);
-        Vector2 resNormalized = resTarget / resViewport; // target res in viewport space
-        Vector2 size = resNormalized / Mathf.Max(resNormalized.x, resNormalized.y);
-        Camera.current.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
-    }
+    public TextMeshProUGUI thankyou;
 
     private void Start()
     {
         OptionDataContainer.SetAllValues(this);
         QualitySettings.vSyncCount = 0;
+        foreach (var n in OptionDataContainer.CompletedNights)
+        {
+            if (n.Value == true && n.Key == 1)
+            {
+                thankyou.gameObject.SetActive(true);
+            }
+        }
     }
 
     public void Quit()

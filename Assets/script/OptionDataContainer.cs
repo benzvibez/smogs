@@ -9,6 +9,7 @@ public class OptionDataContainer : MonoBehaviour
     public static int STOREDquality = 0;
     public static int STOREDaudioMode = 0; // 0 = normal mode, 1 = anime mode, 2 = breaking bad
     public static bool STOREDvsync = false;
+    public static Dictionary<int, bool> CompletedNights = new Dictionary<int, bool>(6);
     public static OptionDataContainer singleton;
 
     private void Start()

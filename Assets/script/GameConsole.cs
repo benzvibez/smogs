@@ -546,6 +546,7 @@ public class GameConsole : MonoBehaviour
             Clock.timerIsRunning = false;
             Clock.singleton.timeText.gameObject.SetActive(false);
             CamHub.singleton.quickBar.SetActive(false);
+            ExitMenu.singleton.StopEverything("GAME_CONSOLE");
             input.text = "";
         }
         else

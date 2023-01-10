@@ -33,8 +33,10 @@ public class PowerController : MonoBehaviour
     public float additionalPower = 1;
     public void Update()
     {
+        if (GameConsole.cinematic)
+            return;
 
-        usageImg.texture = usageImg.texture = usageMeters[(int)UsageLevel]; // since this is zero-based we minus one.
+        usageImg.texture = usageImg.texture = usageMeters[(int)UsageLevel];
         if (powerIsRunning)
         {
             flashTimerRemainder -= Time.deltaTime * 1f;
@@ -61,13 +63,7 @@ public class PowerController : MonoBehaviour
                 powerIsRunning = false;
                 ExitMenu.singleton.StopEverything();
                 ExitMenu.singleton.enabled = false;
-                //play looooooose msuic and shit here and jumpscare scary scary scary scary
-
-
-
                 StartCoroutine(GoToMenu());
-
-
             }
         }
 

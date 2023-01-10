@@ -40,22 +40,39 @@ public class Clock : MonoBehaviour
     public void Update()
     {
 
+        if (GameConsole.cinematic)
+            return;
+
         if (timerIsRunning && !stoppedTimer)
         {
-            if (timeRemaining <= 600)
+            if (timeRemaining <= 360)
             {
-                timeRemaining += Time.deltaTime * clockAdditionalSpeed;
+                timeRemaining += clockAdditionalSpeed;
                 DisplayTime(timeRemaining);
             }
             else if (timerIsRunning)
             {
                 Debug.Log("Time has run out!");
+                if (!CamHub.singleton.mainCamera.enabled)
+                    CamHub.singleton.CamerasED();
+                SanityController.singleton.gameObject.SetActive(false);
+                SanityController.singleton.sanityIsRunning = false;
+                Radio.singleton.AuditabilityLevelText.gameObject.SetActive(false);
+                timeText.text = "";
+                PhoneController.ready = false;
+                PowerController.singleton.powerIsRunning = false;
+                PowerController.singleton.gameObject.SetActive(false);
+                CamHub.singleton.quickBar.SetActive(false);
+                CamHub.singleton.Hidebar.SetActive(false);
+                ExitMenu.singleton.StopEverything();
                 timeRemaining = 0;
                 timerIsRunning = false;
                 winmusic.Play();
                 winimage.enabled = true;
                 dingdong.enabled = true;
                 dingdong.Play();
+                OptionDataContainer.CompletedNights.Add(1, true);
+                StartCoroutine(End());
             }
         }
         else if (timerIsRunning)
@@ -63,6 +80,14 @@ public class Clock : MonoBehaviour
             timeText.text = $"fr ong";
         }
     }
+
+    internal IEnumerator End()
+    {
+        yield return new WaitForSeconds(4);
+            ExitMenu.singleton.MainMenu();
+    }
+
+
     public void DisplayTime(float timeToDisplay)
     {
         timeToDisplay += 1;

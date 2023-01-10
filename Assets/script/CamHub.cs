@@ -60,14 +60,6 @@ public class CamHub : MonoBehaviour
     internal bool camerasInverted;
     void Update()
     {
-
-        Vector2 resTarget = new Vector2(1920f, 1080f);
-        Vector2 resViewport = new Vector2(Screen.width, Screen.height);
-        Vector2 resNormalized = resTarget / resViewport; // target res in viewport space
-        Vector2 size = resNormalized / Mathf.Max(resNormalized.x, resNormalized.y);
-        foreach (var c in Cameras)
-            c.camera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
-        mainCamera.rect = new Rect(default, size) { center = new Vector2(0.5f, 0.5f) };
         if (!overrideMins)
         {
             minL = min;
@@ -96,7 +88,7 @@ public class CamHub : MonoBehaviour
             /*This if statement determins if the mouse is within bounds of the screen
              * and if the mouse is on the left or right far side,
              whichever side it may be on, move that direction.*/
-            if (mousePosition.x < minL && mousePosition.y < 1.0f && mousePosition.y > 0f && mousePosition.x > 0f && mousePosition.x < 1.0f)
+            if (mousePosition.x <= minL && mousePosition.y <= 1.0f && mousePosition.y >= 0f && mousePosition.x >= 0f && mousePosition.x <= 1.0f)
             {
                 if (mainCamera.transform.eulerAngles.y <= ClampLeft)
                     return;

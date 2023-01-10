@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PhoneController : MonoBehaviour
 {
@@ -11,15 +12,22 @@ public class PhoneController : MonoBehaviour
     public GameObject phone;
     public AudioSource joinedCall;
     public GameObject callBTN;
+    public Texture onCall;
+    public Texture onHome;
+    public Material main;
+    private Texture old;
     public static PhoneController singleton;
+    public TextMeshProUGUI info;
 
     private void Awake()
     {
+        old = main.GetTexture("_BaseMap");
         singleton = this;
     }
 
     void Start()
     {
+        SanityController.singleton.gameObject.SetActive(false);
         Radio.singleton.AuditabilityLevelText.gameObject.SetActive(false);
         Clock.timerIsRunning = false;
         PowerController.singleton.powerIsRunning = false;
@@ -52,21 +60,28 @@ public class PhoneController : MonoBehaviour
         if (startPhoneAnimDown)
         {
             if (phone.transform.localPosition.y <= -0.23f)
+            {
+                main.SetTexture("_BaseMap", old);
                 return;
+            }
             phone.transform.position = new Vector3(phone.transform.position.x, phone.transform.position.y - 0.001f, phone.transform.position.z);
         }
     }
 
     public void DeclineCall()
     {
+        main.SetTexture("_BaseMap", onHome);
         startPhoneAnimUp = false;
         ringtone.Stop();
         hangup.Play();
         phoneguy.Stop();
         startPhoneAnimDown = true;
         StartGame();
+        CamHub.singleton.quickBar.SetActive(true);
+        CamHub.singleton.Hidebar.SetActive(true);
         ready = true;
         Radio.singleton.OFF = false;
+        startPhoneAnimDown = true;
     }
 
     public void AcceptCall()
@@ -74,26 +89,53 @@ public class PhoneController : MonoBehaviour
         callBTN.SetActive(false);
         ringtone.Stop();
         joinedCall.Play();
+        main.SetTexture("_BaseMap", onCall);
         StartCoroutine(Call());
-        StartGame();
+        
+    }
+
+    private void OnApplicationQuit()
+    {
+        main.SetTexture("_BaseMap", old);
     }
 
     public IEnumerator Call()
     {
         phoneguy.Play();
+        CamHub.singleton.quickBar.SetActive(true);
+        CamHub.singleton.Hidebar.SetActive(true);
         yield return new WaitForSeconds(phoneguy.clip.length+1);
+        main.SetTexture("_BaseMap", onHome);
         ready = true;
         Radio.singleton.OFF = false;
         startPhoneAnimDown = true;
+        info.text = "night started";
+        info.GetComponent<AudioSource>().Play();
+        SanityController.singleton.gameObject.SetActive(true);
+        SanityController.singleton.sanityIsRunning = true;
+        Radio.singleton.AuditabilityLevelText.gameObject.SetActive(true);
+        Clock.timerIsRunning = true;
+        PowerController.singleton.powerIsRunning = true;
+        PowerController.singleton.gameObject.SetActive(true);
+        StartCoroutine(HideInfo());
     }
 
     public void StartGame()
     {
+        info.text = "night started";
+        info.GetComponent<AudioSource>().Play();
+        SanityController.singleton.gameObject.SetActive(true);
+        SanityController.singleton.sanityIsRunning = true;
         Radio.singleton.AuditabilityLevelText.gameObject.SetActive(true);
         Clock.timerIsRunning = true;
         PowerController.singleton.powerIsRunning = true;
-        CamHub.singleton.quickBar.SetActive(true);
-        CamHub.singleton.Hidebar.SetActive(true);
         PowerController.singleton.gameObject.SetActive(true);
+        StartCoroutine(HideInfo());
+    }
+
+    internal IEnumerator HideInfo()
+    {
+        yield return new WaitForSeconds(5);
+        info.gameObject.SetActive(false);
     }
 }

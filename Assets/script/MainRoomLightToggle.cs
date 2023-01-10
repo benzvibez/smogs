@@ -6,7 +6,7 @@ public class MainRoomLightToggle : MonoBehaviour
 {
 
     public Light breakroomlight;
-    public static bool on;
+    public static bool on = true;
     public static bool off;
 
 

@@ -27,11 +27,13 @@ public class ExitMenu : MonoBehaviour
 
     public void MenuShow()
     {
+        StartEverything();
         Menu.SetActive(!Menu.activeInHierarchy);
     }
 
     public void MainMenu()
     {
+        StartEverything();
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -40,7 +42,7 @@ public class ExitMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void  StopCanvas()
+    public void StopCanvas()
     {
         GameConsole.singleton.DEBUG.SetActive(false);
         GameConsole.singleton.noclipandcinematichelp.SetActive(false);
@@ -49,12 +51,20 @@ public class ExitMenu : MonoBehaviour
         PowerController.singleton.gameObject.SetActive(false);
     }
 
-    public void StopEverything()
+    public void StopEverything(string but = "")
     {
+        if (!PhoneController.ready)
+            return;
+
+        if (but != "GAME_CONSOLE")
+        {
+            GameConsole.singleton.DEBUG.SetActive(false);
+            GameConsole.singleton.noclipandcinematichelp.SetActive(false);
+            GameConsole.singleton.input.gameObject.SetActive(false);
+        }
+        SanityController.singleton.OFF = true;
+        SanityController.singleton.gameObject.SetActive(false);
         Radio.singleton.AuditabilityLevelText.gameObject.SetActive(false);
-        GameConsole.singleton.DEBUG.SetActive(false);
-        GameConsole.singleton.noclipandcinematichelp.SetActive(false);
-        GameConsole.singleton.input.gameObject.SetActive(false);
         CamHub.singleton.quickBar.gameObject.SetActive(false);
         Clock.singleton.enabled = false;
         foreach (var c in CamHub.singleton.Cameras)
@@ -65,9 +75,16 @@ public class ExitMenu : MonoBehaviour
 
     public void StartEverything()
     {
-        GameConsole.singleton.input.gameObject.SetActive(true);
-        CamHub.singleton.quickBar.gameObject.SetActive(true);
-        Clock.singleton.enabled = true;
-        CamHub.singleton.enabled = true;
+
+        MainRoomLightToggle.off = false;
+        ToggleLight.off = false;
+        SanityController.singleton.gameObject.SetActive(true);
+        SanityController.singleton.sanityIsRunning = true;
+        Radio.singleton.AuditabilityLevelText.gameObject.SetActive(true);
+        Clock.timerIsRunning = true;
+        PowerController.singleton.powerIsRunning = true;
+        CamHub.singleton.quickBar.SetActive(true);
+        CamHub.singleton.Hidebar.SetActive(true);
+        PowerController.singleton.gameObject.SetActive(true);
     }
 }
