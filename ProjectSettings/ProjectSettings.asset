@@ -42,10 +42,10 @@ PlayerSettings:
   m_SplashScreenLogos:
   - logo: {fileID: 10404, guid: 0000000000000000e000000000000000, type: 0}
     duration: 2
-  - logo: {fileID: 21300000, guid: d21c81da20393504faaee17d1f249a46, type: 3}
-    duration: 3.65
-  - logo: {fileID: 21300000, guid: 9777d4045d9658146ad3bb3177c86bc8, type: 3}
-    duration: 4.67
+  - logo: {fileID: 21300000, guid: ae1172cfd994b5343bc03f81adfd8df9, type: 3}
+    duration: 2.97
+  - logo: {fileID: 21300000, guid: 256404ecad070c440971519e7cf1100f, type: 3}
+    duration: 2.23
   - logo: {fileID: 21300000, guid: fb1a5cde8da795a4c869785f2e045dea, type: 3}
     duration: 6.48
   m_VirtualRealitySplashScreen: {fileID: 0}
@@ -163,7 +163,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.benzmusicrulez.Smogs-Poutinerie-V1
+    Standalone: com.benzmusicrulez.Smogs-Poutinerie
   buildNumber:
     Standalone: 0
     iPhone: 0
@@ -610,7 +610,7 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 9eb7e5c6904221f42af3308f5660d0dd, type: 3}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 3342b55ce73a77a41a31570548d6b699, type: 3}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 
